@@ -1,0 +1,14 @@
+# Node / Vite
+node_modules
+dist
+*.log
+.cache
+.vscode/
+
+# Env
+.env
+.env.*.local
+
+# Supabase local artifacts (dacă ai)
+supabase/.branches
+supabase/.temp
