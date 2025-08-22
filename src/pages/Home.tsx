@@ -24,21 +24,20 @@ export function Home() {
 
       <main className="bg-gradient-to-b from-white to-farm-light">
         {/* HERO */}
-        <section className="max-w-6xl mx-auto px-4 pt-14 pb-10 lg:pt-20 relative">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <section className="max-w-6xl mx-auto px-4 pt-14 pb-10 lg:pt-0 relative">
+          <div className="grid lg:grid-cols-2 gap-10 items-center min-h-[70vh] lg:min-h-[80vh] py-0">
             <FadeIn y={20}>
               <div>
                 <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-farm-dark">
                   Cutii cu legume proaspete <span className="text-farm-green">livrate săptămânal</span>
                 </h1>
                 <p className="text-gray-700 mt-4 text-lg">
-                  Alege pachetul potrivit și primești legume de sezon, culese din ferme locale, direct la ușa ta.
+                  Primești săptămânal o cutie surpriză cu legume locale, fructe și produse artizanale. Gătești rapid, mănânci echilibrat și susții fermierii din România mai accesibil si ușor decât a fost vreodată.
                 </p>
                 <Stagger delay={0.2}>
                   <ItemUp>
                     <div className="flex flex-wrap items-center gap-4 mt-5 text-sm text-gray-600">
                       <div className="flex items-center gap-2"><span>✅</span> Garanție prospețime</div>
-                      <div className="flex items-center gap-2"><span>🔒</span> Plată sigură cu Stripe</div>
                       <div className="flex items-center gap-2"><span>⏱️</span> 2 minute să te abonezi</div>
                     </div>
                   </ItemUp>
@@ -48,13 +47,13 @@ export function Home() {
                         <a href="#pricing">Începe acum</a>
                       </MotionButton>
                       <MotionButton className="btn btn-outline text-base">
-                        <Link to="/pricing">Vezi pachetele</Link>
+                        <a href="#info">Află mai multe</a>
                       </MotionButton>
                     </div>
                   </ItemUp>
                   <ItemUp>
                     <p className="text-xs text-gray-500 mt-4">
-                      Peste <b>2,300</b> de cutii livrate • Rating mediu <b>4.9/5</b>
+                      Peste <b>300</b> de cutii livrate • Rating mediu <b>5/5</b>
                     </p>
                   </ItemUp>
                 </Stagger>
@@ -64,14 +63,14 @@ export function Home() {
             {/* Imagine cu micro‑interacțiune */}
             <FadeIn delay={0.1}>
               <Motion.div
-                className="card p-0 overflow-hidden will-change-transform"
+                className="card p-0 overflow-hidden will-change-transform h-[320px] md:h-[420px] lg:h-[500px] flex items-center"
                 whileHover={{ scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
                 <img
                   alt="Cutie cu legume proaspete"
                   className="w-full h-full object-cover"
-                  src="https://images.unsplash.com/photo-1607305387292-96c23a65a3f6?q=80&w=1600&auto=format&fit=crop"
+                  src="src\images\image00018.jpeg"
                 />
               </Motion.div>
             </FadeIn>
@@ -86,7 +85,7 @@ export function Home() {
               <FadeIn y={16}>
                 <div className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
                   <img
-                    src="/images/why-greenmart.jpg" // ← schimbă cu imaginea ta
+                    src="src\images\family-cooking.jpg" // ← schimbă cu imaginea ta
                     alt="Familie gătind cu legume proaspete"
                     className="w-full h-full object-cover"
                   />
@@ -95,7 +94,7 @@ export function Home() {
 
               {/* Content right */}
               <Stagger gap={0.08}>
-                <div>
+                <div id="info">
                   <ItemUp>
                     <h2 className="text-3xl md:text-4xl font-extrabold text-farm-dark">
                       De ce să alegi GreenMart?
@@ -109,9 +108,9 @@ export function Home() {
 
                   <div className="mt-6 space-y-3 text-gray-700">
                     {[
-                      "Între 22 și 25 kg de legume și produse artizanale livrate direct la ușa ta lunar",
-                      "Rețete făcute de nutriționiști, adaptate exact pentru selecția de legume din fiecare săptămână",
-                      "Primești săptămânal legume proaspete și produse artizanale direct de la mici producători locali",
+                      "Între 22 și 25 kg de legume, fructe și produse artizanale livrate direct la ușa ta lunar, în funcție de disponibilitate",
+                      "Primești săptămânal legume proaspete și produse artizanale direct de la mici producători locali verificați",
+                      "Nu plătești pentru o etichetă, plătești pentru calitate",
                       "Te bucuri de alimente naturale, gustoase și hrănitoare pentru tine și familia ta",
                       "Timpul pierdut la cumpărături este transformat în timp pentru lucrurile care chiar contează",
                       "Contribui activ la reducerea risipei alimentare și a poluării",
@@ -128,6 +127,19 @@ export function Home() {
                 </div>
               </Stagger>
             </div>
+            <FadeIn>
+              <div className="card mt-10 p-6 md:p-8 text-center">
+                <p className="text-lg font-semibold text-farm-dark">E atât de simplu</p>
+                <p className="text-gray-600 mt-1">
+                  Comanzi online, noi ne ocupăm de restul. Fără drumuri, fără griji – doar bunătăți, săptămână de săptămână.
+                </p>
+                <p className="text-farm-dark mt-4 font-bold">Pregătit să mănânci mai sănătos?</p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                  <a href="#pricing" className="btn btn-primary">Începe acum</a>
+                  <a href="#info" className="btn btn-outline">Află mai multe</a>
+                </div>
+              </div>
+            </FadeIn>
           </div>
         </section>
 
@@ -223,20 +235,6 @@ export function Home() {
                 </ItemUp>
               </div>
             </Stagger>
-
-            <FadeIn>
-              <div className="card mt-10 p-6 md:p-8 text-center">
-                <p className="text-lg font-semibold text-farm-dark">E atât de simplu</p>
-                <p className="text-gray-600 mt-1">
-                  Comanzi online, noi ne ocupăm de restul. Fără drumuri, fără griji – doar bunătăți, săptămână de săptămână.
-                </p>
-                <p className="text-farm-dark mt-4 font-bold">Pregătit să mănânci mai sănătos?</p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-                  <a href="#pricing" className="btn btn-primary">Începe acum</a>
-                  <Link to="/pricing" className="btn btn-outline">Vezi pachetele</Link>
-                </div>
-              </div>
-            </FadeIn>
           </div>
         </section>
 
@@ -253,17 +251,17 @@ export function Home() {
             <ItemUp>
               <HoverCard className="card p-8 flex flex-col h-full">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-farm-dark">Basic Box</h3>
+                  <h3 className="text-2xl font-bold text-farm-dark">Green Box</h3>
                   <span className="text-xs bg-farm-light text-farm-dark py-1 px-2 rounded-full">Cel mai iubit</span>
                 </div>
                 <p className="text-gray-600 mt-1">Pentru 1–2 persoane • selecție săptămânală</p>
                 <div className="mt-5 text-4xl font-extrabold text-farm-dark">
-                  29,99<span className="text-base text-gray-500"> €/săpt</span>
+                  299<span className="text-base text-gray-500"> lei/lună</span>
                 </div>
                 <ul className="mt-5 space-y-2 text-gray-700">
-                  <li>• ~6–8 produse de sezon</li>
+                  <li>• ~4–8 produse de sezon</li>
                   <li>• Fermieri locali verificați</li>
-                  <li>• Pachet flexibil (pauză oricând)</li>
+                  <li>• 4-6 kg livrate săptămânal</li>
                 </ul>
                 <div className="mt-6">
                   <CheckoutButton
@@ -285,12 +283,12 @@ export function Home() {
                 </div>
                 <p className="text-gray-600 mt-1">Pentru familii • varietate și porții mai mari</p>
                 <div className="mt-5 text-4xl font-extrabold text-farm-dark">
-                  49,99<span className="text-base text-gray-500"> €/săpt</span>
+                  550<span className="text-base text-gray-500"> lei/lună</span>
                 </div>
                 <ul className="mt-5 space-y-2 text-gray-700">
-                  <li>• ~10–12 produse premium</li>
+                  <li>• ~8–12 produse premium</li>
                   <li>• Selecție prioritară</li>
-                  <li>• Pachet flexibil (pauză oricând)</li>
+                  <li>• 10-12 kg livrate săptămânal</li>
                 </ul>
                 <div className="mt-6">
                   <CheckoutButton
@@ -321,7 +319,7 @@ export function Home() {
               {[
                 { n: "Mara D.", t: "Cutia Basic ne ajunge perfect pentru săptămână. Totul foarte gustos." },
                 { n: "Andrei P.", t: "Fără stres: vin mereu produse proaspete. Recomand Pro pentru varietate." },
-                { n: "Ioana R.", t: "Îmi place că pot pune pauză când sunt plecată. Experiență excelentă." },
+                { n: "Ioana R.", t: "Îmi place că este mai mult decât o experiență, este un lifestyle." },
               ].map((c, i) => (
                 <ItemUp key={i}>
                   <HoverCard className="card p-6 h-full">
@@ -343,8 +341,8 @@ export function Home() {
             <div className="space-y-4">
               <ItemUp>
                 <details className="card p-5">
-                  <summary className="cursor-pointer font-semibold text-farm-dark">Pot anula oricând?</summary>
-                  <p className="text-gray-600 mt-2">Da. Abonamentul este flexibil și poți pune pauză sau anula oricând.</p>
+                  <summary className="cursor-pointer font-semibold text-farm-dark">Pot anula abonamentul?</summary>
+                  <p className="text-gray-600 mt-2">Da. Abonamentul este lunar și poți anula după fiecare lună. Pentru a face asta ne poți scrie un mail la contact.greenmart@yahoo.com</p>
                 </details>
               </ItemUp>
               <ItemUp>
@@ -356,7 +354,7 @@ export function Home() {
               <ItemUp>
                 <details className="card p-5">
                   <summary className="cursor-pointer font-semibold text-farm-dark">Livrați în zona mea?</summary>
-                  <p className="text-gray-600 mt-2">Acoperim principalele orașe. La checkout introduci adresa și verifici rapid.</p>
+                  <p className="text-gray-600 mt-2">În momentul de față livrăm doar în Timișoara, ne uităm pentru a ne extinde în curând.</p>
                 </details>
               </ItemUp>
             </div>
@@ -372,7 +370,7 @@ export function Home() {
         {/* FOOTER */}
         <footer className="border-t">
           <div className="max-w-6xl mx-auto px-4 py-10 text-sm text-gray-600 flex flex-col md:flex-row gap-3 items-center justify-between">
-            <div>© {new Date().getFullYear()} FreshFarm</div>
+            <div>© {new Date().getFullYear()} GreenMart</div>
             <div className="flex gap-4">
               <a href="#" className="hover:text-farm-dark">Termeni</a>
               <a href="#" className="hover:text-farm-dark">Confidențialitate</a>
@@ -381,17 +379,6 @@ export function Home() {
           </div>
         </footer>
       </main>
-
-      {/* Sticky mobile CTA */}
-      <div className="fixed bottom-4 inset-x-4 md:hidden">
-        <Motion.a
-          href="#pricing"
-          className="btn btn-primary w-full shadow-lg"
-          whileTap={{ scale: 0.98 }}
-        >
-          Alege pachetul
-        </Motion.a>
-      </div>
     </>
   );
 }

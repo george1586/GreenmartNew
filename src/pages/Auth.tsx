@@ -185,7 +185,7 @@ export function Auth() {
             {!isLogin && (
               <>
                 <div>
-                  <label className="block text-sm mb-1">Full name</label>
+                  <label className="block text-sm mb-1">Numele Complet</label>
                   <input
                     type="text"
                     required
@@ -196,7 +196,7 @@ export function Auth() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-1">Phone</label>
+                  <label className="block text-sm mb-1">Numărul de telefon</label>
                   <input
                     type="tel"
                     required
@@ -207,7 +207,7 @@ export function Auth() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-1">Address</label>
+                  <label className="block text-sm mb-1">Adresa completă</label>
                   <input
                     type="text"
                     required
@@ -218,12 +218,12 @@ export function Auth() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-1">City</label>
+                  <label className="block text-sm mb-1">Oraș</label>
                   <input
                     type="text"
                     value={city}
                     disabled
-                    className="w-full border rounded-xl px-3 py-2 bg-gray-100 text-gray-600"
+                    className="w-full border rounded-xl  px-3 py-2 bg-gray-100 text-gray-600"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Livrăm doar în Timișoara.
@@ -246,7 +246,7 @@ export function Auth() {
             }}
             className="mt-4 text-sm text-farm-green hover:underline"
           >
-            {isLogin ? "No account? Sign up" : "Already have an account? Sign in"}
+            {isLogin ? "Nu ai cont? Înregistrează-te" : "Ai deja un cont? Conectează-te"}
           </button>
         </div>
       </main>

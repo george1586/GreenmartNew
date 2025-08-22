@@ -27,9 +27,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-10 bg-white/80 backdrop-blur border-b">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-farm-dark">Fresh<span className="text-farm-green">Farm</span></Link>
+        <Link to="/" className="text-xl font-bold text-farm-dark">Green<span className="text-farm-green">Mart</span></Link>
         <nav className="flex items-center gap-4">
-          <Link to="/pricing" className="text-gray-700 hover:text-farm-dark">Pricing</Link>
           {email ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">{email}</span>
