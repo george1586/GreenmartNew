@@ -1,3 +1,4 @@
+// src/pages/Auth.tsx
 import { Header } from "../components/Header";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../lib/supabase";
@@ -6,14 +7,17 @@ import { useNavigate } from "react-router-dom";
 export function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
+  // shared
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // sign-up fields
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const city = "Timișoara";
 
+  // ui
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -21,72 +25,43 @@ export function Auth() {
 
   const navigate = useNavigate();
 
-  const ensureProfileFromAuth = useCallback(async () => {
-    const { data: u } = await supabase.auth.getUser();
-    const user = u.user;
-    if (!user) return;
-
-    const md = (user.user_metadata ?? {}) as {
-      full_name?: string | null;
-      phone?: string | null;
-      address?: string | null;
-      city?: string | null;
-    };
-
-    await supabase.auth.updateUser({
-      data: {
-        full_name: md.full_name ?? null,
-        phone: md.phone ?? null,
-        address: md.address ?? null,
-        city: md.city ?? "Timișoara",
-      },
-    });
-
-    await supabase.from("profiles").upsert({
-      id: user.id,
-      email: user.email,
-      full_name: md.full_name ?? null,
-      phone: md.phone ?? null,
-      address: md.address ?? null,
-      city: md.city ?? "Timișoara",
-    });
-  }, []);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (data.session) {
-        await ensureProfileFromAuth();
-        navigate("/");
-      }
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session) {
-        await ensureProfileFromAuth();
-        navigate("/");
-      }
-    });
-    return () => sub.subscription.unsubscribe();
-  }, [ensureProfileFromAuth, navigate]);
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setNotice(null);
     setCanResend(false);
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        // Log outcome for debugging
+        console.debug("[signIn] data:", data, "error:", error);
+
+        if (error) {
+          setError(error.message);
+          console.error("Sign in error:", error);
+          return;
+        }
+        if (!data?.session) {
+          setError("Login failed: no session returned (is the email verified?).");
+          console.error("No session returned:", data);
+          return;
+        }
+
+        // ✅ Navigate once here after successful sign-in
+        console.log("Sign in successful, navigating to /");
+        navigate("/");
         return;
       }
+      // Add a debug log to check if this branch is reached
+      console.debug("Sign up branch reached");
 
+      // --- SIGN UP flow ---
       if (!fullName.trim() || !phone.trim() || !address.trim()) {
         throw new Error("Completează nume, telefon și adresă.");
       }
 
-      // === Check email via Edge Function ===
+      // server-side duplicate email check (Edge Function)
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/auth-email-exists`,
         {
@@ -113,7 +88,7 @@ export function Auth() {
         return;
       }
 
-      // === Create account ===
+      // create account
       const { error: suErr } = await supabase.auth.signUp({
         email,
         password,
