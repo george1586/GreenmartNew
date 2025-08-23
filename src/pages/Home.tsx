@@ -70,7 +70,7 @@ export function Home() {
                 <img
                   alt="Cutie cu legume proaspete"
                   className="w-full h-full object-cover"
-                  src="src\images\image00018.jpeg"
+                  src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/image00018.jpeg"
                 />
               </Motion.div>
             </FadeIn>
@@ -85,7 +85,7 @@ export function Home() {
               <FadeIn y={16}>
                 <div className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
                   <img
-                    src="src\images\family-cooking.jpg" // ← schimbă cu imaginea ta
+                    src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/family-cooking.jpg" // ← schimbă cu imaginea ta
                     alt="Familie gătind cu legume proaspete"
                     className="w-full h-full object-cover"
                   />
