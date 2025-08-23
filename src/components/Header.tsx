@@ -85,45 +85,38 @@ export function Header() {
         className={`md:hidden border-t bg-white transition-[max-height] duration-300 overflow-hidden ${open ? "max-h-96" : "max-h-0"
           }`}
       >
-        {/* <nav className="flex flex-col gap-1 px-4 py-3">
+        <nav className="flex flex-col gap-1 px-4 py-3">
           <Link onClick={() => setOpen(false)} to="/" className="rounded-md px-2 py-2 hover:bg-gray-50">
             Acasă
           </Link>
-          <Link onClick={() => setOpen(false)} to="/preturi" className="rounded-md px-2 py-2 hover:bg-gray-50">
-            Prețuri
-          </Link>
-          <Link onClick={() => setOpen(false)} to="/despre" className="rounded-md px-2 py-2 hover:bg-gray-50">
-            Despre
-          </Link> */}
+          <div className="my-2 h-px bg-gray-200" />
 
-        <div className="my-2 h-px bg-gray-200" />
-
-        {email ? (
-          <>
-            <div className="flex items-center gap-2 rounded-md bg-gray-100 px-2.5 py-2 text-sm">
-              <Mail className="h-4 w-4" />
-              <span className="truncate">{email}</span>
-            </div>
-            <button
-              onClick={handleSignOut}
-              className="mt-2 inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-gray-50"
+          {email ? (
+            <>
+              <div className="flex items-center gap-2 rounded-md bg-gray-100 px-2.5 py-2 text-sm">
+                <Mail className="h-4 w-4" />
+                <span className="truncate">{email}</span>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="mt-2 inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-gray-50"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/auth"
+              onClick={() => setOpen(false)}
+              className="mt-1 inline-flex items-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700"
             >
-              <LogOut className="h-4 w-4" />
-              Sign out
-            </button>
-          </>
-        ) : (
-          <Link
-            to="/auth"
-            onClick={() => setOpen(false)}
-            className="mt-1 inline-flex items-center gap-2 rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700"
-          >
-            <LogIn className="h-4 w-4" />
-            Login
-          </Link>
-        )}
-      </nav>
-    </div>
+              <LogIn className="h-4 w-4" />
+              Login
+            </Link>
+          )}
+        </nav>
+      </div>
     </header >
   );
 }
