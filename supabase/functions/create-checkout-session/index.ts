@@ -34,8 +34,6 @@ Deno.serve(async (req) => {
 
   try {
     const body = (await req.json()) as Payload;
-    console.log("create-checkout-session payload:", body); // visible in logs
-
     // Basic validation
     if (!body?.priceId || typeof body.priceId !== "string") {
       return new Response(JSON.stringify({ error: "Missing or invalid priceId" }), {
@@ -54,8 +52,8 @@ Deno.serve(async (req) => {
       billing_address_collection: "auto",
       phone_number_collection: { enabled: false },
       allow_promotion_codes: true,
-      success_url: `${FRONTEND_URL}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${FRONTEND_URL}/cancel`,
+      success_url: `$greenmart.ro/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `$greenmart.ro/cancel`,
     });
 
     return new Response(JSON.stringify({ id: session.id }), {
