@@ -70,7 +70,7 @@ export function Home() {
                 <img
                   alt="Cutie cu legume proaspete"
                   className="w-full h-full object-cover"
-                  src="src\images\image00018.jpeg"
+                  src="/images/image00018.jpeg"
                 />
               </Motion.div>
             </FadeIn>
