@@ -10,7 +10,7 @@ export function Cancel() {
           <h1 className="text-3xl font-extrabold text-farm-dark mb-3">Payment cancelled</h1>
         </div>
         <div className="text-center mt-6">
-          <Link to="/pricing" className="btn btn-outline">Try again</Link>
+          <Link to="/" className="btn btn-outline">Try again</Link>
         </div>
       </main>
     </>
