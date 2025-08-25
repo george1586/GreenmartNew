@@ -8,7 +8,8 @@ import { Auth } from "./pages/Auth";
 import { ThankYou } from "./pages/ThankYou";
 import { Cancel } from "./pages/Cancel";
 import { Helmet } from "react-helmet";
-
+import { TermsAndConditions } from "./pages/TermsAndConditions";
+import { Confidentialitate } from "./pages/Confidentialitate";
 // === personalizează aici ===
 const SITE_URL = "https://greenmart.ro";
 const SITE_NAME = "Greenmart";
@@ -149,6 +150,32 @@ const router = createBrowserRouter([
           path="/cancel"
         />
         <Cancel />
+      </>
+    ),
+  },
+  {
+    path: "/termeni",
+    element: (
+      <>
+        <SEO
+          title="Termeni și condiții"
+          description="Află mai multe despre termenii și condițiile serviciului Greenmart."
+          path="/terms"
+        />
+        <TermsAndConditions />
+      </>
+    ),
+  },
+  {
+    path: "/confidentialitate",
+    element: (
+      <>
+        <SEO
+          title="Află mai multe despre confidențialitate"
+          description="Află mai multe despre politica de confidențialitate a serviciului Greenmart."
+          path="/confidentialitate"
+        />
+        <Confidentialitate />
       </>
     ),
   },
