@@ -374,7 +374,7 @@ export function Home() {
             <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
               <div>© {new Date().getFullYear()} GreenMart</div>
               <div className="flex gap-4">
-                <a href="/terms" className="hover:text-farm-dark">Termeni</a>
+                <a href="/termeni" className="hover:text-farm-dark">Termeni</a>
                 <a href="/confidentialitate" className="hover:text-farm-dark">Confidențialitate</a>
               </div>
             </div>
