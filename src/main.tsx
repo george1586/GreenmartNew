@@ -10,6 +10,7 @@ import { Cancel } from "./pages/Cancel";
 import { Helmet } from "react-helmet";
 import { TermsAndConditions } from "./pages/TermsAndConditions";
 import { Confidentialitate } from "./pages/Confidentialitate";
+import Subscriptions from "./pages/Subscriptions";
 // === personalizează aici ===
 const SITE_URL = "https://greenmart.ro";
 const SITE_NAME = "Greenmart";
@@ -176,6 +177,19 @@ const router = createBrowserRouter([
           path="/confidentialitate"
         />
         <Confidentialitate />
+      </>
+    ),
+  },
+  {
+    path: "/subscriptii",
+    element: (
+      <>
+        <SEO
+          title="Menajează subscripții"
+          description="Gestionează-ți abonamentele și preferințele de plată."
+          path="/subscriptii"
+        />
+        <Subscriptions />
       </>
     ),
   },

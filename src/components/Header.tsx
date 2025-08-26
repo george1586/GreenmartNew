@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, LogIn, LogOut, Mail, Leaf } from "lucide-react";
+import { Home, Menu, X, LogIn, LogOut, Mail, Leaf, CreditCard } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 export function Header() {
@@ -10,11 +10,9 @@ export function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // initial session
     supabase.auth.getSession().then(({ data }) => {
       setEmail(data.session?.user.email ?? null);
     });
-    // subscribe to auth changes
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setEmail(session?.user.email ?? null);
     });
@@ -26,7 +24,7 @@ export function Header() {
   async function handleSignOut() {
     await supabase.auth.signOut();
     setOpen(false);
-    navigate("/"); // send user home after sign out
+    navigate("/");
   }
 
   return (
@@ -36,16 +34,22 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
             <Leaf className="h-6 w-6 mr-1" aria-hidden="true" />
-            <span className="text-xl font-bold text-farm-dark">Green</span><span className="text-xl font-bold text-farm-green">Mart</span>
+            <span className="text-xl font-bold text-farm-dark">Green</span>
+            <span className="text-xl font-bold text-farm-green">Mart</span>
           </Link>
         </div>
-
-        {/* Center: nav (add links if needed) */}
 
         {/* Right: desktop actions */}
         <div className="ml-auto hidden md:flex items-center gap-3">
           {email ? (
             <>
+              <Link
+                to="/subscriptii"
+                className="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm hover:bg-gray-50"
+              >
+                <CreditCard className="h-4 w-4" />
+                Abonamente
+              </Link>
               <span className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-2.5 py-1.5 text-sm">
                 <Mail className="h-4 w-4" />
                 {email}
@@ -86,9 +90,26 @@ export function Header() {
           }`}
       >
         <nav className="flex flex-col gap-1 px-4 py-3">
-          <Link onClick={() => setOpen(false)} to="/" className="rounded-md px-2 py-2 hover:bg-gray-50">
+          <Link
+            onClick={() => setOpen(false)}
+            to="/"
+            className="rounded-md px-2 py-2 hover:bg-gray-50 inline-flex items-center gap-2"
+          >
+            <Home className="h-4 w-4" />
             Acasă
           </Link>
+
+          {email && (
+            <Link
+              onClick={() => setOpen(false)}
+              to="/subscriptii"
+              className="rounded-md px-2 py-2 hover:bg-gray-50 inline-flex items-center gap-2"
+            >
+              <CreditCard className="h-4 w-4" />
+              Abonamente
+            </Link>
+          )}
+
           <div className="my-2 h-px bg-gray-200" />
 
           {email ? (
@@ -117,6 +138,6 @@ export function Header() {
           )}
         </nav>
       </div>
-    </header >
+    </header>
   );
 }
