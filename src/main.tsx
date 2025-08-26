@@ -10,6 +10,7 @@ import { Cancel } from "./pages/Cancel";
 import { Helmet } from "react-helmet";
 import { TermsAndConditions } from "./pages/TermsAndConditions";
 import { Confidentialitate } from "./pages/Confidentialitate";
+import { Analytics } from "@vercel/analytics/next"
 import Subscriptions from "./pages/Subscriptions";
 // === personalizează aici ===
 const SITE_URL = "https://greenmart.ro";
@@ -61,6 +62,7 @@ function SEO({
 
   return (
     <Helmet>
+      <Analytics></Analytics>
       <html lang="ro" />
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
