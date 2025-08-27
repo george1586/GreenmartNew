@@ -7,6 +7,30 @@ import { Header } from "../components/Header";
 export function LocalProducts() {
     return (
         <>
+            <script type="application/ld+json">{JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": "Produse locale: calitatea a doua, prețuri și risipa",
+                "author": { "@type": "Organization", "name": "Greenmart" },
+                "publisher": { "@type": "Organization", "name": "Greenmart", "logo": { "@type": "ImageObject", "url": "https://greenmart.ro/android-chrome-512x512.png" } },
+                "image": ["https://greenmart.ro/legume-urate.jpg"],
+                "datePublished": "2025-08-27",
+                "dateModified": "2025-08-27",
+                "mainEntityOfPage": "https://greenmart.ro/produse-locale"
+            })}</script>
+            <Helmet>
+                <title>Produse locale Timișoara – calitatea a doua, prețuri și risipa | Greenmart</title>
+                <meta name="description" content="De ce „calitatea a doua” e perfect comestibilă, cum se formează prețurile din magazine și cum risipa alimetară poluează mult." />
+                <link rel="canonical" href="https://greenmart.ro/produse-locale" />
+                {/* OG/Twitter */}
+                <meta property="og:type" content="article" />
+                <meta property="og:title" content="Produse locale: calitatea a doua, prețuri și risipa" />
+                <meta property="og:description" content="„Clasa II” nu înseamnă mai puțin comestibil. De ce e ok să cumperi local și cum reduci risipa." />
+                <meta property="og:url" content="https://greenmart.ro/produse-locale" />
+                <meta property="og:image" content="https://greenmart.ro/legume-urate.jpg" />
+                <meta name="twitter:card" content="summary_large_image" />
+            </Helmet>
+
             <Header></Header>
             <main className="bg-gradient-to-b from-white to-farm-light min-h-screen">
                 <Helmet>

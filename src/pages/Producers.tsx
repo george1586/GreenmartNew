@@ -6,6 +6,18 @@ import { Header } from "../components/Header";
 export function Producers() {
     return (
         <>
+            <Helmet>
+                <title>Producători locali Timișoara – partenerii Greenmart</title>
+                <meta name="description" content="Fermieri, ateliere artizanale și ferme din Timișoara cu care colaborăm." />
+                <link rel="canonical" href="https://greenmart.ro/producatori" />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Producători locali Timișoara – partenerii Greenmart" />
+                <meta property="og:description" content="Descoperă fermele și atelierele locale." />
+                <meta property="og:url" content="https://greenmart.ro/producatori" />
+                <meta property="og:image" content="https://greenmart.ro/fermieri-varza.jpg" />
+                <meta name="twitter:card" content="summary_large_image" />
+            </Helmet>
+
             <Header></Header>
             <main className="bg-gradient-to-b from-white to-farm-light min-h-screen">
                 <Helmet>
