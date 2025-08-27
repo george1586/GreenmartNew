@@ -10,7 +10,10 @@ import { Cancel } from "./pages/Cancel";
 import { TermsAndConditions } from "./pages/TermsAndConditions";
 import { Confidentialitate } from "./pages/Confidentialitate";
 import Subscriptions from "./pages/Subscriptions";
+import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
+import { LocalProducts } from "./pages/LocalProducts";
+import { Producers } from "./pages/Producers";
 
 // Router config
 const router = createBrowserRouter([
@@ -21,11 +24,15 @@ const router = createBrowserRouter([
   { path: "/termeni", element: <TermsAndConditions /> },
   { path: "/confidentialitate", element: <Confidentialitate /> },
   { path: "/subscriptii", element: <Subscriptions /> },
+  { path: "/producatori", element: <Producers /> },
+  { path: "/produse-locale", element: <LocalProducts /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <Analytics />
+    <HelmetProvider>
+      <RouterProvider router={router} />
+      <Analytics />
+    </HelmetProvider>
   </React.StrictMode>
 );

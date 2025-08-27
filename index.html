@@ -3,21 +3,36 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-language" content="ro-RO" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="theme-color" content="#16a34a" />
 
-  <title>Greenmart — Cutii proaspete, locale, livrate în Timișoara</title>
+  <title>Produse locale Timișoara – cutii cu legume de la producători locali | Greenmart</title>
   <meta name="description"
     content="Greenmart livrează săptămânal cutii cu legume, fructe și produse artizanale de la producători locali din Timișoara. Abonamente flexibile, proaspăt și sustenabil." />
-  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://greenmart.ro/" />
+
+  <!-- Favicons din /public -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+
+  <!-- Preconnect pentru imaginile din Supabase (mai rapid la prima încărcare) -->
+  <link rel="preconnect" href="https://hasxcndrhvtyjphntpft.supabase.co" crossorigin />
 
   <!-- Open Graph -->
   <meta property="og:locale" content="ro_RO" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Greenmart" />
-  <meta property="og:title" content="Greenmart — Cutii proaspete, locale, livrate în Timișoara" />
+  <meta property="og:title" content="Produse locale Timișoara | Greenmart" />
   <meta property="og:description"
-    content="Cutii cu legume, fructe și produse artizanale locale. Abonamente flexibile, livrate proaspăt în Timișoara." />
-  <meta property="og:url" content="https://greenmart.ro" />
+    content="Cutiile cu legume, fructe și produse artizanale de la producători locali din Timișoara. Comandă online, proaspăt și sustenabil." />
+  <meta property="og:url" content="https://greenmart.ro/" />
   <meta property="og:image"
     content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg" />
   <meta property="og:image:width" content="1200" />
@@ -25,15 +40,58 @@
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Greenmart — Cutii proaspete, locale, livrate în Timișoara" />
-  <meta name="twitter:description"
-    content="Cutii cu legume, fructe și produse artizanale locale. Abonamente flexibile, livrate proaspăt în Timișoara." />
+  <meta name="twitter:title" content="Produse locale Timișoara | Greenmart" />
+  <meta name="twitter:description" content="Cutiile cu legume și fructe de la producători locali din Timișoara." />
   <meta name="twitter:image"
     content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg" />
 
-  <!-- Icon -->
-  <link rel="icon" href="/leaf2_00000.png" />
-  <meta name="theme-color" content="#16a34a" />
+  <!-- Structured data: WebSite + Organization + LocalBusiness -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "Greenmart",
+          "url": "https://greenmart.ro/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://greenmart.ro/cauta?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "Greenmart",
+          "url": "https://greenmart.ro/",
+          "logo": "https://greenmart.ro/android-chrome-512x512.png",
+          "sameAs": [
+            "https://www.facebook.com/greenmart",
+            "https://www.instagram.com/greenmart"
+          ]
+        },
+        {
+          "@type": "GroceryStore",
+          "name": "Greenmart",
+          "url": "https://greenmart.ro/",
+          "image": "https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg",
+          "telephone": "+40 742 220 938",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Timișoara",
+            "addressCountry": "RO"
+          },
+          "areaServed": { "@type": "City", "name": "Timișoara" },
+          "openingHoursSpecification": [{
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+            "opens": "09:00",
+            "closes": "18:00"
+          }]
+        }
+      ]
+    }
+  </script>
 </head>
 
 <body class="bg-gray-50">

@@ -341,8 +341,20 @@ export function Home() {
             <div className="space-y-4">
               <ItemUp>
                 <details className="card p-5">
+                  <summary className="cursor-pointer font-semibold text-farm-dark">Care sunt beneficiile de a comanda de la noi?</summary>
+                  <p className="text-gray-600 mt-2">Beneficiezi mereu de o supriză și varietate, nu mai trebuie să Îți pierzi timpul în magazin, livrare la ușă, și suport dedicat pentru clienți. De asemenea, produsele sunt proaspete și de calitate superioară, dacă vrei să înveți mai multe despre ele poți afla pe acest <a href="/produse-locale" className="text-farm-green">link</a>.</p>
+                </details>
+              </ItemUp>
+              <ItemUp>
+                <details className="card p-5">
+                  <summary className="cursor-pointer font-semibold text-farm-dark">Cât de sigur este să comanzi de la producători locali?</summary>
+                  <p className="text-gray-600 mt-2">Produsele sunt atent selecționate și verificate pentru a asigura calitatea și siguranța. Colaborăm doar cu producători locali de încredere, care respectă standardele de siguranță alimentară. Dacă ai vrea sa știi mai multe poți afla de pe acest <a href="/producatori" className="text-farm-green">link</a>.</p>
+                </details>
+              </ItemUp>
+              <ItemUp>
+                <details className="card p-5">
                   <summary className="cursor-pointer font-semibold text-farm-dark">Pot anula abonamentul?</summary>
-                  <p className="text-gray-600 mt-2">Da. Abonamentul este lunar și poți anula după fiecare lună. Pentru a face asta ne poți scrie un mail la contact.greenmart@yahoo.com</p>
+                  <p className="text-gray-600 mt-2">Da. Abonamentul este lunar și poți anula după fiecare lună. Poți face asta din contul tău, dacă ai probleme ne poți contacta oricând la greenmart@writeme.com.</p>
                 </details>
               </ItemUp>
               <ItemUp>

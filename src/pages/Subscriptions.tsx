@@ -13,6 +13,40 @@ import {
     CheckCircle2,
 } from "lucide-react";
 import { Header } from "../components/Header";
+import { Helmet } from "react-helmet-async";
+// în JSX:
+<Helmet>
+    <title>Abonamente Greenmart – cutii cu legume locale</title>
+    <link rel="canonical" href="https://greenmart.ro/subscriptii" />
+    <script type="application/ld+json">{JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": [
+            {
+                "@type": "ListItem", "position": 1,
+                "item": {
+                    "@type": "Product",
+                    "name": "Green Box – Abonament lunar",
+                    "image": ["https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"],
+                    "description": "Cutie săptămânală pentru 1–2 persoane, 4–6 kg livrate săptămânal.",
+                    "brand": "Greenmart",
+                    "offers": { "@type": "Offer", "priceCurrency": "RON", "price": "299", "availability": "https://schema.org/InStock", "url": "https://greenmart.ro/subscriptii" }
+                }
+            },
+            {
+                "@type": "ListItem", "position": 2,
+                "item": {
+                    "@type": "Product",
+                    "name": "Pro Box – Abonament lunar",
+                    "image": ["https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"],
+                    "description": "Cutie săptămânală pentru familii, 10–12 kg livrate săptămânal.",
+                    "brand": "Greenmart",
+                    "offers": { "@type": "Offer", "priceCurrency": "RON", "price": "550", "availability": "https://schema.org/InStock", "url": "https://greenmart.ro/subscriptii" }
+                }
+            }
+        ]
+    })}</script>
+</Helmet>
 
 // 🔗 Edge Functions URL (configurează prin .env dacă vrei)
 const FUNCTIONS_BASE =
