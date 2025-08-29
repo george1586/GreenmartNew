@@ -250,9 +250,6 @@ function SubscriptionCard({
                         <span className="inline-flex items-center gap-1">
                             <CalendarDays className="h-4 w-4" /> Creat: {created}
                         </span>
-                        <span className="inline-flex items-center gap-1">
-                            <Clock className="h-4 w-4" /> Valabil până la: {renews}
-                        </span>
                     </div>
                 </div>
 

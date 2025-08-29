@@ -1,29 +1,34 @@
-// src/pages/Auth.tsx
 import { Header } from "../components/Header";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function Auth() {
   const [isLogin, setIsLogin] = useState(true);
 
-  // shared
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // sign-up fields
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const city = "Timișoara";
 
-  // ui
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [canResend, setCanResend] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 👉 Dacă venim redirectați din signup cu mesaj în state
+  useEffect(() => {
+    if (location.state?.notice) {
+      setNotice(location.state.notice);
+      setIsLogin(true); // forțăm login view
+    }
+  }, [location.state]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,34 +39,23 @@ export function Auth() {
     try {
       if (isLogin) {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        // Log outcome for debugging
-        console.debug("[signIn] data:", data, "error:", error);
-
         if (error) {
           setError(error.message);
-          console.error("Sign in error:", error);
           return;
         }
         if (!data?.session) {
           setError("Login failed: no session returned (is the email verified?).");
-          console.error("No session returned:", data);
           return;
         }
-
-        // ✅ Navigate once here after successful sign-in
-        console.log("Sign in successful, navigating to /");
         navigate("/");
         return;
       }
-      // Add a debug log to check if this branch is reached
-      console.debug("Sign up branch reached");
 
       // --- SIGN UP flow ---
       if (!fullName.trim() || !phone.trim() || !address.trim()) {
         throw new Error("Completează nume, telefon și adresă.");
       }
 
-      // server-side duplicate email check (Edge Function)
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/auth-email-exists`,
         {
@@ -70,12 +64,7 @@ export function Auth() {
           body: JSON.stringify({ email }),
         }
       );
-
-      if (!resp.ok) {
-        const txt = await resp.text().catch(() => "");
-        throw new Error(`Email check failed (${resp.status}). ${txt || "See function logs."}`);
-      }
-
+      if (!resp.ok) throw new Error("Email check failed");
       const check: { exists?: boolean; confirmed?: boolean } = await resp.json();
       if (check.exists) {
         setNotice(
@@ -88,7 +77,6 @@ export function Auth() {
         return;
       }
 
-      // create account
       const { error: suErr } = await supabase.auth.signUp({
         email,
         password,
@@ -99,8 +87,10 @@ export function Auth() {
       });
       if (suErr) throw suErr;
 
-      setNotice(`Ți-am trimis un email de verificare la ${email}.`);
-      setPassword("");
+      // 👉 După signup, mergem pe Login cu notificare
+      navigate("/auth", {
+        state: { notice: `Ți-am trimis un email de verificare la ${email}.` },
+      });
     } catch (err: any) {
       setError(err.message || String(err));
     } finally {
@@ -194,7 +184,6 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm mb-1">Numărul de telefon</label>
                   <input
@@ -205,7 +194,6 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm mb-1">Adresa completă</label>
                   <input
@@ -216,14 +204,13 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm mb-1">Oraș</label>
                   <input
                     type="text"
                     value={city}
                     disabled
-                    className="w-full border rounded-xl  px-3 py-2 bg-gray-100 text-gray-600"
+                    className="w-full border rounded-xl px-3 py-2 bg-gray-100 text-gray-600"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     Livrăm doar în Timișoara.
@@ -233,7 +220,7 @@ export function Auth() {
             )}
 
             <button disabled={loading} className="btn btn-primary w-full">
-              {loading ? "Please wait..." : (isLogin ? "Sign in" : "Sign up")}
+              {loading ? "Please wait..." : isLogin ? "Sign in" : "Sign up"}
             </button>
           </form>
 
