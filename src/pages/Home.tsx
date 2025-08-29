@@ -29,7 +29,7 @@ export function Home() {
             <FadeIn y={20}>
               <div>
                 <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-farm-dark">
-                  Cutii cu legume proaspete <span className="text-farm-green">livrate săptămânal</span>
+                  Cutii cu legume proaspete <span className="text-farm-green">livrate săptămânal, în fiecare sâmbătă</span>
                 </h1>
                 <p className="text-gray-700 mt-4 text-lg">
                   Primești săptămânal o cutie surpriză cu legume locale, fructe și produse artizanale. Gătești rapid, mănânci echilibrat și susții fermierii din România mai accesibil si ușor decât a fost vreodată.
