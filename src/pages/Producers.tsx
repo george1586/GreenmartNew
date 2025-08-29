@@ -245,15 +245,6 @@ export function Producers() {
                                 <p className="text-farm-dark font-semibold text-center sm:text-left">
                                     Gata să încerci o cutie locală?
                                 </p>
-                                <div className="flex gap-3">
-                                    <Link to="/subscriptii" className="btn btn-primary">Vezi abonamentele</Link>
-                                    <a
-                                        href="/producatori-locali-timisoara"
-                                        className="btn btn-outline"
-                                    >
-                                        Vezi producătorii
-                                    </a>
-                                </div>
                             </div>
                         </Stagger>
                     </section>

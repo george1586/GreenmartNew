@@ -228,7 +228,6 @@ export function LocalProducts() {
                                 </p>
                                 <div className="flex gap-3">
                                     <Link to="/subscriptii" className="btn btn-primary">Vezi abonamentele</Link>
-                                    <a href="/producatori-locali-timisoara" className="btn btn-outline">Cunoaște producătorii</a>
                                 </div>
                             </div>
                         </Stagger>
