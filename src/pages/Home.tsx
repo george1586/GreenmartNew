@@ -261,7 +261,7 @@ export function Home() {
                 <ul className="mt-5 space-y-2 text-gray-700">
                   <li>• ~4–8 produse de sezon</li>
                   <li>• Fermieri locali verificați</li>
-                  <li>• 4-6 kg livrate săptămânal</li>
+                  <li>• 3-5 kg livrate săptămânal</li>
                 </ul>
                 <div className="mt-6">
                   <CheckoutButton
@@ -286,9 +286,9 @@ export function Home() {
                   550<span className="text-base text-gray-500"> lei/lună</span>
                 </div>
                 <ul className="mt-5 space-y-2 text-gray-700">
-                  <li>• ~8–12 produse premium</li>
+                  <li>• ~4–10 produse premium</li>
                   <li>• Selecție prioritară</li>
-                  <li>• 10-12 kg livrate săptămânal</li>
+                  <li>• 8-10 kg livrate săptămânal</li>
                 </ul>
                 <div className="mt-6">
                   <CheckoutButton
