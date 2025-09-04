@@ -86,7 +86,7 @@ export function Auth() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/#pricing`, // or a specific path if you need
+          emailRedirectTo: `${window.location.origin}/?goto=pricing`, // or a specific path if you need
           data: { full_name: fullName, phone, address, city },
         },
       });
