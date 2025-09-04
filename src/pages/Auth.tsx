@@ -1,14 +1,15 @@
+// src/pages/Auth.tsx
 import { Header } from "../components/Header";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function Auth() {
   const [isLogin, setIsLogin] = useState(true);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // sign-up fields
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -20,13 +21,12 @@ export function Auth() {
   const [canResend, setCanResend] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation() as { state?: { redirectTo?: string; notice?: string } };
+  const redirectTo = location.state?.redirectTo || "/";
 
-  // 👉 Dacă venim redirectați din signup cu mesaj în state
   useEffect(() => {
     if (location.state?.notice) {
       setNotice(location.state.notice);
-      setIsLogin(true); // forțăm login view
     }
   }, [location.state]);
 
@@ -44,10 +44,11 @@ export function Auth() {
           return;
         }
         if (!data?.session) {
-          setError("Login failed: no session returned (is the email verified?).");
+          setError("Login failed: no session returned (este verificat emailul?).");
           return;
         }
-        navigate("/");
+        // ✅ go back to where we came from (e.g., "/#pricing")
+        navigate(redirectTo, { replace: true });
         return;
       }
 
@@ -56,41 +57,46 @@ export function Auth() {
         throw new Error("Completează nume, telefon și adresă.");
       }
 
-      const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/auth-email-exists`,
-        {
+      // optional: your email-exists edge function
+      try {
+        const resp = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/auth-email-exists`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
+        });
+        if (resp.ok) {
+          const check: { exists?: boolean; confirmed?: boolean } = await resp.json();
+          if (check.exists) {
+            setNotice(
+              check.confirmed
+                ? `Există deja un cont pe ${email}. Autentifică-te.`
+                : `Există deja un cont neconfirmat pe ${email}. Verifică inbox-ul sau apasă „Resend email”.`
+            );
+            setCanResend(!check.confirmed);
+            setPassword("");
+            return;
+          }
         }
-      );
-      if (!resp.ok) throw new Error("Email check failed");
-      const check: { exists?: boolean; confirmed?: boolean } = await resp.json();
-      if (check.exists) {
-        setNotice(
-          check.confirmed
-            ? `Există deja un cont pe ${email}. Autentifică-te.`
-            : `Există deja un cont neconfirmat pe ${email}. Verifică inbox-ul sau apasă „Resend email”.`
-        );
-        setCanResend(!check.confirmed);
-        setPassword("");
-        return;
+      } catch (_) {
+        // ignore precheck failure, continue sign-up
       }
 
+      // create account
       const { error: suErr } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/#pricing`, // or a specific path if you need
           data: { full_name: fullName, phone, address, city },
         },
       });
       if (suErr) throw suErr;
 
-      // 👉 După signup, mergem pe Login cu notificare
-      navigate("/auth", {
-        state: { notice: `Ți-am trimis un email de verificare la ${email}.` },
-      });
+      // ✅ After sign-up, switch to login view and preserve redirect
+      setIsLogin(true);
+      setPassword("");
+      setNotice(`Ți-am trimis un email de verificare la ${email}. După ce confirmi, autentifică-te pentru a continua la plată.`);
+      // keep redirectTo implicitly in location.state since we won't navigate away here
     } catch (err: any) {
       setError(err.message || String(err));
     } finally {
@@ -150,6 +156,7 @@ export function Auth() {
           )}
 
           <form onSubmit={onSubmit} className="space-y-4">
+            {/* Email */}
             <div>
               <label className="block text-sm mb-1">Email</label>
               <input
@@ -161,6 +168,7 @@ export function Auth() {
               />
             </div>
 
+            {/* Password */}
             <div>
               <label className="block text-sm mb-1">Password</label>
               <input
@@ -172,6 +180,7 @@ export function Auth() {
               />
             </div>
 
+            {/* Sign-up extra fields */}
             {!isLogin && (
               <>
                 <div>
@@ -184,6 +193,7 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm mb-1">Numărul de telefon</label>
                   <input
@@ -194,6 +204,7 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm mb-1">Adresa completă</label>
                   <input
@@ -204,6 +215,7 @@ export function Auth() {
                     className="w-full border rounded-xl px-3 py-2"
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm mb-1">Oraș</label>
                   <input
@@ -212,15 +224,13 @@ export function Auth() {
                     disabled
                     className="w-full border rounded-xl px-3 py-2 bg-gray-100 text-gray-600"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Livrăm doar în Timișoara.
-                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Livrăm doar în Timișoara.</p>
                 </div>
               </>
             )}
 
             <button disabled={loading} className="btn btn-primary w-full">
-              {loading ? "Please wait..." : isLogin ? "Sign in" : "Sign up"}
+              {loading ? "Please wait..." : (isLogin ? "Sign in" : "Sign up")}
             </button>
           </form>
 
@@ -228,7 +238,8 @@ export function Auth() {
             onClick={() => {
               setIsLogin(!isLogin);
               setError(null);
-              setNotice(null);
+              // keep notice if we came for checkout, clear only sign-up temp notices
+              if (!location.state?.notice) setNotice(null);
               setCanResend(false);
             }}
             className="mt-4 text-sm text-farm-green hover:underline"

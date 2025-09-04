@@ -1,55 +1,78 @@
-import { stripePromise } from "../lib/stripe";
-import { supabase } from "../lib/supabase";
+// src/components/CheckoutButton.tsx
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 
 type Props = {
   priceId: string;
-  quantity?: number;
-  mode?: "subscription";
-  customerEmail?: string | null;
+  customerEmail: string | null;
+  mode?: "payment" | "subscription";
   label?: string;
 };
 
-export function CheckoutButton({
-  priceId,
-  quantity = 1,
-  mode = "subscription",
-  customerEmail,
-  label,
-}: Props) {
+export function CheckoutButton({ priceId, customerEmail, mode = "subscription", label = "Cumpără" }: Props) {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onClick = async () => {
-    // If there’s no email (i.e., user is logged out), send to /auth
-    if (!customerEmail) {
-      // optional: remember they wanted to buy – you could store priceId in sessionStorage
-      navigate("/auth");
-      return;
-    }
-
+    setLoading(true);
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/create-checkout-session`,
-        {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ priceId, quantity, mode, customerEmail }),
-        }
-      );
-      const data = await res.json();
-      if (!data.id) throw new Error(data.error || "Failed to create checkout session");
+      // 1) Require auth
+      const { data } = await supabase.auth.getSession();
+      const session = data.session;
+      if (!session) {
+        // Send to /auth and remember we wanted to checkout from #pricing
+        navigate("/auth", {
+          state: {
+            // so the Auth page knows why it was opened
+            notice: "Autentifică-te sau creează-ți contul pentru a continua la plată.",
+            redirectTo: "/#pricing",
+          },
+          replace: true,
+        });
+        return;
+      }
 
-      const stripe = await stripePromise;
-      const { error } = await stripe!.redirectToCheckout({ sessionId: data.id });
-      if (error) alert(error.message);
-    } catch (e: any) {
-      alert(e.message || String(e));
+      // 2) Your existing checkout logic (example calling an Edge Function that creates a Stripe session)
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/create-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          price_id: priceId,
+          mode,
+          customer_email: customerEmail ?? undefined,
+          // optionally pass a success/cancel URL as well
+          success_url: `${window.location.origin}/thank-you`,
+          cancel_url: `${window.location.origin}/cancel`,
+        }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt || `Checkout failed (${res.status})`);
+      }
+
+      const { url } = await res.json();
+      if (!url) throw new Error("Stripe URL missing from response");
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      alert("Nu am putut iniția checkout-ul. Încearcă din nou.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <button onClick={onClick} className="btn btn-primary w-full">
-      {label ?? "Choose"}
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className="btn btn-primary w-full"
+    >
+      {loading ? "Se încarcă…" : label}
     </button>
   );
 }
