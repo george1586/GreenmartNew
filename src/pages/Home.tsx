@@ -330,7 +330,7 @@ export function Home() {
             <Stagger gap={0.1}>
               <div className="grid md:grid-cols-4 gap-6 mt-10 auto-rows-fr">
                 {[
-                  { i: 1, emoji: "🧺", t: "Alege box-ul preferat", d: "Toate conțin legume și produse artizanale de sezon. Diferența o face cantitatea și diversitatea de care ai nevoie." },
+                  { i: 1, emoji: "🧺", t: "Alege box-ul preferat", d: "Toate conțin legume,fructe și/sau produse artizanale de sezon. Diferența o face cantitatea și diversitatea de care ai nevoie." },
                   { i: 2, emoji: "🚚", t: "În tranzit", d: "Pregătim comanda în fiecare sâmbătă dimineața. Selecție, împachetare, prospețime – le rezolvăm noi." },
                   { i: 3, emoji: "🏠", t: "Ajunge la tine", d: "Livrăm cu grijă la ușă. Fără cozi, fără trafic, fără stres." },
                   { i: 4, emoji: "🥗", t: "Gătești. Mănânci. Te simți bine.", d: "Proaspăt, fără risipă și cu impact real asupra sănătății tale și a comunității." },
@@ -388,7 +388,7 @@ export function Home() {
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["4–8 produse de sezon", "Fermieri locali verificați", "Ambalaje reciclabile"].map((f, i) => (
+                    {["4–8 produse de sezon", "Fermieri locali verificați", "Legume și fructe proaspete"].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
@@ -399,12 +399,14 @@ export function Home() {
                   {/* Mini calendar */}
                   <MonthProducts
                     items={[
+                      "Roșii",
+                      "Castraveți",
                       "Morcovi",
-                      "Cartofi noi",
-                      "Mere roșii",
-                      "Varză albă",
-                      "Dovleac plăcintar",
-                      "Salată verde",
+                      "Vinete",
+                      "Cartofi",
+                      "Ceapă",
+                      "Dovlecei",
+                      "Ardei",
                     ]}
                   />
 
@@ -417,7 +419,6 @@ export function Home() {
                       label="Începe cu Green Mic"
                       mode="subscription"
                     />
-                    <p className="text-[11px] text-gray-500 mt-2">Anulezi oricând.</p>
                   </div>
                 </div>
               </div>
@@ -444,7 +445,7 @@ export function Home() {
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["4–10 produse premium", "Selecție prioritară", "Livrare inclusă"].map((f, i) => (
+                    {["4–8 produse de sezon", "Fermieri verificați", "Legume și fructe proaspete"].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
@@ -454,12 +455,14 @@ export function Home() {
 
                   <MonthProducts
                     items={[
+                      "Roșii",
+                      "Castraveți",
                       "Morcovi",
-                      "Cartofi dulci",
-                      "Pere",
-                      "Varză roșie",
-                      "Conopidă",
-                      "Ouă de țară",
+                      "Vinete",
+                      "Cartofi",
+                      "Ceapă",
+                      "Dovlecei",
+                      "Ardei",
                     ]}
                   />
 
@@ -471,7 +474,6 @@ export function Home() {
                       label="Alege Green Mare"
                       mode="subscription"
                     />
-                    <p className="text-[11px] text-gray-500 mt-2">Gestionare rapidă din cont.</p>
                   </div>
                 </div>
               </div>
@@ -487,18 +489,18 @@ export function Home() {
                       Nou
                     </span>
                   </div>
-                  <p className="text-gray-600 mt-1">Selecție premium • 2–3 persoane</p>
+                  <p className="text-gray-600 mt-1">1-2 persoane • selecție premium</p>
 
                   <div className="mt-6">
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold text-farm-dark leading-none">450</span>
                       <span className="text-sm text-gray-500">lei / lună</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">~6–8 kg/săpt • 4 livrări</p>
+                    <p className="text-xs text-gray-500 mt-1">~5–7 kg/săpt • 4 livrări</p>
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["Produse artizanale premium", "Selecții de sezon extinse", "Ambalare atentă, eco"].map((f, i) => (
+                    {["6-12 produse premium", "Prioritate maximă la selecție", "Legume, fructe și produse artizanale"].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-amber-600" />
                         <span>{f}</span>
@@ -508,12 +510,18 @@ export function Home() {
 
                   <MonthProducts
                     items={[
-                      "Dovleac plăcintar",
-                      "Struguri",
-                      "Brânză de capră",
-                      "Ciuperci champignon",
-                      "Roșii uscate",
-                      "Pâine cu maia",
+                      "Roșii",
+                      "Gogoșari",
+                      "Mere",
+                      "Castraveți",
+                      "Pere",
+                      "Vinete",
+                      "Dovlecei",
+                      "Cartofi",
+                      "Ceapă",
+                      "Prune",
+                      "Păine",
+                      "Miere",
                     ]}
                   />
 
@@ -525,7 +533,6 @@ export function Home() {
                       label="Alege Pro Mic"
                       mode="subscription"
                     />
-                    <p className="text-[11px] text-gray-500 mt-2">Anulezi oricând, fără penalizări.</p>
                   </div>
                 </div>
               </div>
@@ -552,7 +559,7 @@ export function Home() {
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["10–14 produse premium", "Prioritate maximă la selecție", "Livrare inclusă "].map((f, i) => (
+                    {["6–12 produse premium", "Prioritate maximă la selecție", "Legume, fructe și produse artizanale "].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
@@ -562,12 +569,18 @@ export function Home() {
 
                   <MonthProducts
                     items={[
-                      "Broccoli bio",
-                      "Vinete coapte",
-                      "Cașcaval maturat",
-                      "Mere fuji",
-                      "Prune afumate",
-                      "Miere polifloră",
+                      "Roșii",
+                      "Gogoșari",
+                      "Mere",
+                      "Castraveți",
+                      "Pere",
+                      "Vinete",
+                      "Dovlecei",
+                      "Cartofi",
+                      "Ceapă",
+                      "Prune",
+                      "Păine",
+                      "Miere",
                     ]}
                   />
 
@@ -579,7 +592,6 @@ export function Home() {
                       label="Alege Pro Mare"
                       mode="subscription"
                     />
-                    <p className="text-[11px] text-gray-500 mt-2">Livrare inclusă + suport prioritar.</p>
                   </div>
                 </div>
               </div>
@@ -588,9 +600,9 @@ export function Home() {
 
           <FadeIn delay={0.1}>
             <div className="flex flex-wrap items-center justify-center gap-4 mt-10 text-sm text-gray-600">
-              <div className="flex items-center gap-2"><span>🔁</span> Pauză/Anulare dintr-un click</div>
-              <div className="flex items-center gap-2"><span>🔒</span> Plăți securizate Stripe</div>
-              <div className="flex items-center gap-2"><span>🌱</span> Ambalaje eco</div>
+              <div className="flex items-center gap-2"><span>🔁</span> Anulare dintr-un click</div>
+              <div className="flex items-center gap-2"><span>🚚</span> Livrare gratuită</div>
+              <div className="flex items-center gap-2"><span>🌱</span> Prospețime garantată</div>
               <div className="flex items-center gap-2"><span>📦</span> 4 livrări/lună</div>
             </div>
           </FadeIn>
@@ -654,8 +666,8 @@ export function Home() {
                     </>
                   ),
                 },
+                { q: "Pot alege produsele din box?", a: "Nu, din cauza numărului mare de comenzi, produsele sunt preselectate în funcție de sezon și disponibilitate, este ceva ce am vrea să implementăm în viitor dar acum ne putem asigura doar că boxurile sunt cât se poate posibil de diverse." },
                 { q: "Pot anula abonamentul?", a: "Da. Abonamentul este lunar și poți anula din contul tău după fiecare lună." },
-                { q: "Ce metode de plată acceptați?", a: "Plăți securizate prin Stripe (carduri principale, Apple/Google Pay unde e disponibil)." },
                 { q: "Livrați în zona mea?", a: "În momentul de față livrăm doar în Timișoara; urmărim extinderea." },
               ].map(({ q, a }, i) => (
                 <ItemUp key={i}>
