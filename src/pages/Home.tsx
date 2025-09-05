@@ -491,7 +491,7 @@ export function Home() {
 
                   <div className="mt-6">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-farm-dark leading-none">649</span>
+                      <span className="text-4xl font-extrabold text-farm-dark leading-none">450</span>
                       <span className="text-sm text-gray-500">lei / lună</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">~6–8 kg/săpt • 4 livrări</p>
@@ -545,7 +545,7 @@ export function Home() {
 
                   <div className="mt-6">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold text-farm-dark leading-none">849</span>
+                      <span className="text-4xl font-extrabold text-farm-dark leading-none">799</span>
                       <span className="text-sm text-gray-500">lei / lună</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">~10–14 kg/săpt • 4 livrări</p>

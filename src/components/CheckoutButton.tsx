@@ -5,12 +5,13 @@ import { supabase } from "../lib/supabase";
 
 type Props = {
   priceId: string;
-  customerEmail: string | null;
-  mode?: "payment" | "subscription";
+  quantity?: number;
+  customerEmail?: string | null;
+  mode?: "subscription";
   label?: string;
 };
 
-export function CheckoutButton({ priceId, customerEmail, mode = "subscription", label = "Cumpără" }: Props) {
+export function CheckoutButton({ priceId, quantity = 1, customerEmail, mode = "subscription", label = "Cumpără" }: Props) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -41,9 +42,10 @@ export function CheckoutButton({ priceId, customerEmail, mode = "subscription", 
           Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
-          price_id: priceId,
+          priceId,
+          quantity,
           mode,
-          customer_email: customerEmail ?? undefined,
+          customerEmail,
           // optionally pass a success/cancel URL as well
           success_url: `${window.location.origin}/thank-you`,
           cancel_url: `${window.location.origin}/cancel`,
