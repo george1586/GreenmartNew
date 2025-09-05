@@ -13,54 +13,37 @@ import {
   Motion,
 } from "../components/motion";
 import { Star, CheckCircle2, Crown, Sparkles } from "lucide-react";
-import { useLocation } from "react-router-dom";
 
+/* ====== Stripe Price IDs ====== */
 const priceBasic = import.meta.env.VITE_STRIPE_PRICE_BASIC as string;      // Green Box Mic
 const pricePro = import.meta.env.VITE_STRIPE_PRICE_PRO as string;          // Green Box Mare
 const priceProMic = import.meta.env.VITE_STRIPE_PRICE_PRO_MIC as string;   // Pro Box Mic
 const priceProMare = import.meta.env.VITE_STRIPE_PRICE_PRO_MARE as string; // Pro Box Mare
 
+/* ====== Calendar Component ====== */
+function MonthProducts({ items }: { items: string[] }) {
+  return (
+    <div className="mt-6">
+      <div className="text-xs font-medium text-gray-500 mb-2">
+        Produse ce vor fi livrate în Octombrie
+      </div>
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-1 text-[13px] text-gray-700 leading-snug">
+        {items.map((it, i) => (
+          <li key={i} className="flex gap-1">
+            <span>•</span>
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-2 text-[11px] text-gray-400">
+        Produsele pot varia în funcție de sezonalitate și disponibilitate.
+      </p>
+    </div>
+  );
+}
+
 export function Home() {
   const [email, setEmail] = useState<string | null>(null);
-  const location = useLocation();
-
-  // 1) Decide target anchor from either ?goto=pricing or #pricing
-  function targetAnchor(): string | null {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("goto") === "pricing") return "#pricing";
-    const h = window.location.hash.replace(/^#/, "");
-    if (h.startsWith("pricing")) return "#pricing";
-    return null;
-  }
-
-  // 2) On mount (and whenever hash/search changes), strip Supabase tokens from the URL
-  useEffect(() => {
-    const hash = window.location.hash;
-    const hasSupabaseTokens =
-      hash.includes("access_token=") ||
-      hash.includes("refresh_token=") ||
-      hash.includes("type=signup") ||
-      hash.includes("type=recovery");
-
-    if (hasSupabaseTokens) {
-      const url = new URL(window.location.href);
-      const anchor = targetAnchor() ?? "";
-      // Keep pathname & search (?goto=pricing), but drop the tokeny hash; optionally re-apply #pricing
-      window.history.replaceState({}, "", `${url.origin}${url.pathname}${url.search}${anchor}`);
-    }
-  }, [location.hash, location.search]);
-
-  // 3) Smooth scroll to the wanted anchor (runs on mount & when state changes)
-  useEffect(() => {
-    const anchor = targetAnchor();
-    if (!anchor) return;
-    const el = document.querySelector(anchor);
-    if (!el) return;
-    // wait until the frame where content is laid out
-    requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }, [location.hash, location.search]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setEmail(data.session?.user.email ?? null));
@@ -253,8 +236,8 @@ export function Home() {
           </div>
         </section>
 
-        {/* PRICING — all offers on ONE ROW at lg */}
-        <section id="pricing" className="max-w-6xl mx-auto px-4 py-14">
+        {/* PRICING — all offers on ONE ROW at lg, with mini-calendar under each */}
+        <section id="pricing" className="max-w-6xl mx-auto px-4 py-14 scroll-mt-24">
           <FadeIn>
             <div className="text-center mb-10">
               <span className="inline-flex items-center gap-2 bg-farm-light text-farm-dark rounded-full px-3 py-1 text-xs">
@@ -265,25 +248,20 @@ export function Home() {
             </div>
           </FadeIn>
 
-          {/* grid: 1 col on mobile, 2 on md, 4 on lg (all in one row) */}
-          {/* grid: 1 col on mobile, 2 on md, 4 on lg (all in one row) */}
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+          {/* 1 col (sm), 2 col (md), 4 col (lg). auto-rows-fr menține înălțimi egale. */}
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows-fr">
             {/* Green Box Mic */}
             <ItemUp>
               <div className="relative rounded-3xl p-[1px] bg-gradient-to-br from-green-200/70 to-emerald-300/60 shadow-sm h-full">
                 <div className="rounded-3xl bg-white p-7 h-full flex flex-col">
-                  {/* header */}
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold text-farm-dark">Green Box Mic</h3>
                     <span className="text-[10px] uppercase tracking-wide bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">
                       Popular
                     </span>
                   </div>
-
-                  {/* subheading */}
                   <p className="text-gray-600 mt-1">1–2 persoane • selecție săptămânală</p>
 
-                  {/* price */}
                   <div className="mt-6">
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold text-farm-dark leading-none">299</span>
@@ -292,15 +270,27 @@ export function Home() {
                     <p className="text-xs text-gray-500 mt-1">~3–5 kg/săpt • 4 livrări</p>
                   </div>
 
-                  {/* features */}
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["4–8 produse de sezon", "Fermieri locali verificați", "Ambalaje prietenoase cu mediul"].map((f, i) => (
+                    {["4–8 produse de sezon", "Fermieri locali verificați", "Ambalaje reciclabile"].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
                       </li>
                     ))}
                   </ul>
+
+                  {/* Mini calendar */}
+                  <MonthProducts
+                    items={[
+                      "Morcovi",
+                      "Cartofi noi",
+                      "Mere roșii",
+                      "Varză albă",
+                      "Dovleac plăcintar",
+                      "Salată verde",
+                    ]}
+                  />
+
 
                   {/* CTA pinned bottom */}
                   <div className="mt-auto pt-7">
@@ -326,7 +316,6 @@ export function Home() {
                       <Sparkles className="h-3 w-3" /> Recomandat
                     </span>
                   </div>
-
                   <p className="text-gray-600 mt-1">Familii • porții mai mari</p>
 
                   <div className="mt-6">
@@ -338,13 +327,25 @@ export function Home() {
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["4–10 produse premium", "Selecție prioritară", "Livrare inclusă (zone selectate)"].map((f, i) => (
+                    {["4–10 produse premium", "Selecție prioritară", "Livrare inclusă"].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
                       </li>
                     ))}
                   </ul>
+
+                  <MonthProducts
+                    items={[
+                      "Morcovi",
+                      "Cartofi dulci",
+                      "Pere",
+                      "Varză roșie",
+                      "Conopidă",
+                      "Ouă de țară",
+                    ]}
+                  />
+
 
                   <div className="mt-auto pt-7">
                     <CheckoutButton
@@ -369,7 +370,6 @@ export function Home() {
                       Nou
                     </span>
                   </div>
-
                   <p className="text-gray-600 mt-1">Selecție premium • 2–3 persoane</p>
 
                   <div className="mt-6">
@@ -388,6 +388,18 @@ export function Home() {
                       </li>
                     ))}
                   </ul>
+
+                  <MonthProducts
+                    items={[
+                      "Dovleac plăcintar",
+                      "Struguri",
+                      "Brânză de capră",
+                      "Ciuperci champignon",
+                      "Roșii uscate",
+                      "Pâine cu maia",
+                    ]}
+                  />
+
 
                   <div className="mt-auto pt-7">
                     <CheckoutButton
@@ -412,7 +424,6 @@ export function Home() {
                       <Crown className="h-3.5 w-3.5" /> Value
                     </span>
                   </div>
-
                   <p className="text-gray-600 mt-1">Selecție premium • 3–5 persoane</p>
 
                   <div className="mt-6">
@@ -424,13 +435,25 @@ export function Home() {
                   </div>
 
                   <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                    {["10–14 produse premium/săpt", "Prioritate maximă la selecție", "Livrare inclusă (zone selectate)"].map((f, i) => (
+                    {["10–14 produse premium", "Prioritate maximă la selecție", "Livrare inclusă "].map((f, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <CheckCircle2 className="h-4 w-4 mt-0.5 text-emerald-600" />
                         <span>{f}</span>
                       </li>
                     ))}
                   </ul>
+
+                  <MonthProducts
+                    items={[
+                      "Broccoli bio",
+                      "Vinete coapte",
+                      "Cașcaval maturat",
+                      "Mere fuji",
+                      "Prune afumate",
+                      "Miere polifloră",
+                    ]}
+                  />
+
 
                   <div className="mt-auto pt-7">
                     <CheckoutButton
@@ -445,7 +468,6 @@ export function Home() {
               </div>
             </ItemUp>
           </div>
-
 
           <FadeIn delay={0.1}>
             <div className="flex flex-wrap items-center justify-center gap-4 mt-10 text-sm text-gray-600">
