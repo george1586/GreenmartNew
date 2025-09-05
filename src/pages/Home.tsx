@@ -13,6 +13,7 @@ import {
   Motion,
 } from "../components/motion";
 import { Star, CheckCircle2, Crown, Sparkles } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 /* ====== Stripe Price IDs ====== */
 const priceBasic = import.meta.env.VITE_STRIPE_PRICE_BASIC as string;      // Green Box Mic
@@ -44,6 +45,122 @@ function MonthProducts({ items }: { items: string[] }) {
 
 export function Home() {
   const [email, setEmail] = useState<string | null>(null);
+  const location = useLocation();
+
+
+
+
+
+
+  // 1) Decide target anchor from either ?goto=pricing or #pricing
+
+
+  function targetAnchor(): string | null {
+
+
+    const params = new URLSearchParams(window.location.search);
+
+
+    if (params.get("goto") === "pricing") return "#pricing";
+
+
+    const h = window.location.hash.replace(/^#/, "");
+
+
+    if (h.startsWith("pricing")) return "#pricing";
+
+
+    return null;
+
+
+  }
+
+
+
+
+
+  // 2) On mount (and whenever hash/search changes), strip Supabase tokens from the URL
+
+
+  useEffect(() => {
+
+
+    const hash = window.location.hash;
+
+
+    const hasSupabaseTokens =
+
+
+      hash.includes("access_token=") ||
+
+
+      hash.includes("refresh_token=") ||
+
+
+      hash.includes("type=signup") ||
+
+
+      hash.includes("type=recovery");
+
+
+
+
+
+    if (hasSupabaseTokens) {
+
+
+      const url = new URL(window.location.href);
+
+
+      const anchor = targetAnchor() ?? "";
+
+
+      // Keep pathname & search (?goto=pricing), but drop the tokeny hash; optionally re-apply #pricing
+
+
+      window.history.replaceState({}, "", `${url.origin}${url.pathname}${url.search}${anchor}`);
+
+
+    }
+
+
+  }, [location.hash, location.search]);
+
+
+
+
+
+  // 3) Smooth scroll to the wanted anchor (runs on mount & when state changes)
+
+
+  useEffect(() => {
+
+
+    const anchor = targetAnchor();
+
+
+    if (!anchor) return;
+
+
+    const el = document.querySelector(anchor);
+
+
+    if (!el) return;
+
+
+    // wait until the frame where content is laid out
+
+
+    requestAnimationFrame(() => {
+
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+
+    });
+
+
+  }, [location.hash, location.search]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setEmail(data.session?.user.email ?? null));
