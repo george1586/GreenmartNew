@@ -613,7 +613,7 @@ export function Home() {
           <Stagger>
             <div className="grid md:grid-cols-3 gap-6 auto-rows-fr">
               {[
-                { n: "Mara D.", t: "Cutia Basic ne ajunge perfect pentru săptămână. Totul foarte gustos.", r: 5 },
+                { n: "Mara D.", t: "Cutia Green ne ajunge perfect pentru săptămână. Totul foarte gustos.", r: 5 },
                 { n: "Andrei P.", t: "Fără stres: vin mereu produse proaspete. Recomand Pro pentru varietate.", r: 5 },
                 { n: "Ioana R.", t: "Îmi place că este mai mult decât o experiență, este un lifestyle.", r: 5 },
               ].map((c, i) => (
