@@ -14,18 +14,6 @@ import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { LocalProducts } from "./pages/LocalProducts";
 import { Producers } from "./pages/Producers";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { fbqPageView } from "./lib/fbq";
-
-function UseMetaPageView() {
-  const loc = useLocation();
-  useEffect(() => {
-    // wait for DOM updates, then fire
-    requestAnimationFrame(() => fbqPageView());
-  }, [loc.pathname, loc.search, loc.hash]);
-  return null;
-}
 
 // Router config
 const router = createBrowserRouter([
@@ -44,7 +32,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <HelmetProvider>
       <RouterProvider router={router} />
-      <UseMetaPageView />
       <Analytics />
     </HelmetProvider>
   </React.StrictMode>
