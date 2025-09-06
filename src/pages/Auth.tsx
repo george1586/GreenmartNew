@@ -124,6 +124,9 @@ export function Auth() {
 
   return (
     <>
+      <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=770536062251831&ev=PageView&noscript=1"
+      /></noscript>
       <Header />
       <main className="max-w-md mx-auto px-4 py-16">
         <div className="card p-8">

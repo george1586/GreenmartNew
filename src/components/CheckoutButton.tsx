@@ -2,6 +2,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { fbqTrack } from "../lib/fbq";
+
+
+fbqTrack('InitiateCheckout', {
+  value: 299.00,
+  currency: 'RON',
+  content_name: 'Green Box Mic',
+  content_type: 'product',
+});
 
 type Props = {
   priceId: string;
