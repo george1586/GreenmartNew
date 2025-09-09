@@ -7,6 +7,10 @@ export default {
         floaty: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
         shimmer: { '100%': { transform: 'translateX(100%)' } },
       },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'], // default
+        heading: ['Poppins', 'sans-serif'], // pentru titluri & CTA
+      },
       animation: {
         floaty: 'floaty 6s ease-in-out infinite',
         shimmer: 'shimmer 1.4s linear infinite',
