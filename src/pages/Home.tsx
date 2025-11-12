@@ -47,11 +47,6 @@ export function Home() {
   const [email, setEmail] = useState<string | null>(null);
   const location = useLocation();
 
-
-
-
-
-
   // 1) Decide target anchor from either ?goto=pricing or #pricing
 
 
@@ -173,74 +168,79 @@ export function Home() {
       <Header />
 
       <main className="bg-gradient-to-b from-white to-farm-light">
-        {/* HERO */}
-        <section className="max-w-6xl mx-auto px-4 pt-14 pb-10 lg:pt-0 relative">
-          <div className="grid lg:grid-cols-2 gap-10 items-center min-h-[70vh] lg:min-h-[80vh] py-0">
-            <FadeIn y={20}>
-              <div>
-                <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-farm-dark">
-                  Cutii cu produse locale, proaspete,{" "}
-                  <span className="text-farm-green">livrate săptămânal, în fiecare sâmbătă</span>
-                </h1>
-                <p className="text-gray-700 mt-4 text-lg">
-                  Primești săptămânal un mix de legume locale, fructe și produse artizanale. Gătești rapid, mănânci
-                  echilibrat și susții fermierii din România mai accesibil și ușor decât a fost vreodată.
-                </p>
-                <Stagger delay={0.2}>
-                  <ItemUp>
-                    <div className="flex flex-wrap items-center gap-4 mt-5 text-sm text-gray-600">
-                      <div className="flex items-center gap-2"><span>✅</span> Garanție prospețime</div>
-                      <div className="flex items-center gap-2"><span>⏱️</span> 2 minute să te abonezi</div>
-                    </div>
-                  </ItemUp>
-                  <ItemUp>
-                    <div className="flex flex-col sm:flex-row gap-3 mt-7">
-                      <MotionButton className="btn btn-primary text-base">
-                        <a href="#pricing">Începe acum</a>
-                      </MotionButton>
-                      <MotionButton className="btn btn-outline text-base">
-                        <a href="#info">Află mai multe</a>
-                      </MotionButton>
-                    </div>
-                  </ItemUp>
-                  <ItemUp>
-                    <p className="text-xs text-gray-500 mt-4">
-                      Peste <b>300</b> de cutii livrate • Rating mediu <b>5/5</b>
-                    </p>
-                  </ItemUp>
-                </Stagger>
-              </div>
-            </FadeIn>
+        {/* HERO - full cover image with text layered on top */}
+        <section className="relative">
+          <div className="relative w-full min-h-[70vh] lg:min-h-screen overflow-hidden">
+            {/* Background image */}
+            <div className="absolute inset-0 z-0">
+              <img
+                alt="Cutie cu legume proaspete"
+                className="w-full h-full object-cover"
+                src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/hero-cover.png"
+              />
+              {/* subtle dark overlay for readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/30" />
+            </div>
 
-            {/* Imagine cu micro-interacțiune */}
-            <FadeIn delay={0.1}>
-              <Motion.div
-                className="card p-0 overflow-hidden will-change-transform h-[320px] md:h-[420px] lg:h-[500px] flex items-center"
-                whileHover={{ scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-              >
-                <img
-                  alt="Cutie cu legume proaspete"
-                  className="w-full h-full object-cover"
-                  src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"
-                />
-              </Motion.div>
-            </FadeIn>
+            <div className="max-w-6xl mx-auto px-4 mt-20 pt-20 pb-10 lg:pt-28 lg:pb-24 relative z-10">
+              <div className="grid lg:grid-cols-2 gap-10 items-center">
+                <FadeIn y={20}>
+                  <div className="text-white">
+                    <h1 className="text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-lg">
+                      Piața online a fermierilor{' '}
+                      <span className="font-extrabold drop-shadow-md">care livrează direct la ușa ta.</span>
+                    </h1>
+                    {/* <p className="mt-4 text-lg text-white/95 drop-shadow-sm">
+                      Primești săptămânal un mix de legume locale, fructe și produse artizanale. Gătești rapid, mănânci
+                      echilibrat și susții fermierii din România mai accesibil și ușor decât a fost vreodată.
+                    </p> */}
+                    <Stagger delay={0.2}>
+                      {/* <ItemUp>
+                        <div className="flex flex-wrap items-center gap-4 mt-5 text-sm text-white/90 drop-shadow-sm">
+                          <div className="flex items-center gap-2"><span>✅</span> Garanție prospețime</div>
+                          <div className="flex items-center gap-2"><span>⏱️</span> 2 minute să te abonezi</div>
+                        </div>
+                      </ItemUp> */}
+                      <ItemUp>
+                        <div className="flex flex-col items-start mt-8">
+                          <MotionButton className="btn btn-primary w-[240px] h-[52px] text-lg font-semibold flex items-center justify-center">
+                            <a href="#pricing" className="text-white block">Începe acum</a>
+                          </MotionButton>
+                          <p className="text-sm text-white/80 mt-3">Livrăm produse locale de sezon direct de la fermieri.</p>
+                        </div>
+                      </ItemUp>
+                      <ItemUp>
+                        <p className="text-xs text-white/80 drop-shadow-sm mt-4">
+                          Peste <b>300</b> de cutii livrate • Rating mediu <b>5/5</b>
+                        </p>
+                      </ItemUp>
+                    </Stagger>
+                  </div>
+                </FadeIn>
+
+                {/* empty column to keep spacing on wide screens */}
+                <div className="hidden lg:block" />
+              </div>
+            </div>
           </div>
         </section>
 
         {/* WHY CHOOSE */}
-        <section id="why-choose" className="bg-white/70">
+        <section id="why-choose" className="bg-white/70 py-12">
           <div className="max-w-6xl mx-auto px-4 py-12">
             <div className="grid lg:grid-cols-2 gap-10 items-center">
-              <FadeIn y={16}>
-                <div className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
+              <FadeIn delay={0.1}>
+                <Motion.div
+                  className="card p-0 overflow-hidden will-change-transform h-[320px] md:h-[420px] lg:h-[500px] flex items-center"
+                  whileHover={{ scale: 1.01 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                >
                   <img
-                    src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/family-cooking.jpg"
-                    alt="Familie gătind cu legume proaspete"
+                    alt="Cutie cu legume proaspete"
                     className="w-full h-full object-cover"
+                    src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"
                   />
-                </div>
+                </Motion.div>
               </FadeIn>
 
               <Stagger gap={0.08}>
