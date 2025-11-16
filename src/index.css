@@ -23,6 +23,7 @@
   /* 12px */
   transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-weight: bold;
 }
 
 .btn-primary:hover {

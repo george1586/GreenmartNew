@@ -14,6 +14,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { LocalProducts } from "./pages/LocalProducts";
 import { Producers } from "./pages/Producers";
+import { GetStarted } from "./pages/GetStarted";
 
 // Router config
 const router = createBrowserRouter([
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
   { path: "/subscriptii", element: <Subscriptions /> },
   { path: "/producatori", element: <Producers /> },
   { path: "/produse-locale", element: <LocalProducts /> },
+  { path: "/get-started", element: <GetStarted /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
