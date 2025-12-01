@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
                 );
             }
 
-            const { error } = await supabaseAdmin.from(table).insert([{ email, offer }]);
+            const { data, error } = await supabaseAdmin.from(table).insert([{ email, offer }]);
 
 
             if (error) {
@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
             }
 
             return new Response(
-                JSON.stringify({ message: "Created succesfully" }),
+                JSON.stringify({ message: "Created succesfully", id: data?.[0]?.id }),
                 {
                     status: 200,
                     headers: {

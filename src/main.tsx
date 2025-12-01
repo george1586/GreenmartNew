@@ -15,6 +15,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { LocalProducts } from "./pages/LocalProducts";
 import { Producers } from "./pages/Producers";
 import { GetStarted } from "./pages/GetStarted";
+import { Plans } from "./pages/Plans";
+import { DeliveryAndSize } from "./pages/DeliveryAndSize";
 
 // Router config
 const router = createBrowserRouter([
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
   { path: "/producatori", element: <Producers /> },
   { path: "/produse-locale", element: <LocalProducts /> },
   { path: "/get-started", element: <GetStarted /> },
+  { path: "/plans", element: <Plans /> },
+  { path: "/delivery-and-size", element: <DeliveryAndSize /> }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

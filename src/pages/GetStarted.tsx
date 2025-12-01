@@ -7,6 +7,8 @@ import { footer } from "framer-motion/client";
 import { Footer } from "../components/Footer";
 import { createClient, User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
+import { useSession } from "../hooks/useSession"
+import { Plans } from "./Plans";
 
 export function GetStarted() {
     const navigate = useNavigate();
@@ -14,6 +16,7 @@ export function GetStarted() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { updateSession } = useSession();
 
     useEffect(() => { if (!error) return; const t = setTimeout(() => setError(""), 4000); return () => clearTimeout(t); }, [error]);
     async function handleSubmit(e: React.FormEvent) {
@@ -40,7 +43,12 @@ export function GetStarted() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ id, offer }),
                     });
-                    navigate('/plans');
+                    localStorage.setItem("userSession", JSON.stringify({
+                        userId: id,
+                        email,
+                        offer,
+                    }));
+                    navigate('/plans', { state: { userId: id } });
                 }
                 else {
                     const add_user = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/add-user`, {
@@ -48,9 +56,10 @@ export function GetStarted() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email, table, offer }),
                     });
-                    const text = await add_user.text();
-                    console.log(text);
-                    // navigate('/plans');
+                    const answ = await resp.json();
+                    const id = answ.id;
+                    updateSession({ offer: offer, email: email })
+                    navigate('/plans', { state: { userId: id } });
                 }
             }
         }
@@ -73,7 +82,7 @@ export function GetStarted() {
                     <h2 className="text-center font-bold text-3xl">Alege oferta gratuita</h2>
                     <h3 className="text-center font-bold text-gray-700 md:max-w-[50%] sm:max-w-[75%]">ULTIMA SANSA pentru oferta de iarna, inregistreaza-te pana pe 25/12 si alege GRATUIT dintr-un borcan de miere sau o sticla de sirop în prima cutie sau fursecuri gratuite pe viață.</h3>
                 </div>
-                <form action="/chooseOffer" onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-4 mt-12" method="post">
+                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-4 mt-12" method="post">
                     <div className="flex flex-wrap gap-4 mx-auto">
                         <Option header="Miere Gratuită în Prima Cutie" text="Primește un borcan de miere naturală, pură și ecologică, gratuit la prima ta comandă. Gust autentic și calitate superioară, direct din stupul local. Valoare 42 lei.﻿" image="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/mieredealbine.jpg" selected={offer === "Miere"} onSelect={() => setOffer("Miere")}></Option>
                         <Option header="Sirop Gratuit în Prima Cutie" text="Primește o sticlă de sirop natural, preparat din fructe locale, fără adaosuri artificiale, gratuit la prima ta comandă. Aromă pură și gust autentic. Valoare 35 lei.﻿" image="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/syrup.jpg" selected={offer === "Sirop"} onSelect={() => setOffer("Sirop")}></Option>
