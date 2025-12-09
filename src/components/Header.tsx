@@ -30,7 +30,6 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/80 backdrop-blur ">
       <div className="mx-auto flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        {/* Left: brand */}
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center">
             <Leaf className="h-6 w-6 mr-1" aria-hidden="true" />
@@ -39,7 +38,6 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Right: desktop actions */}
         <div className="ml-auto hidden md:flex items-center gap-3">
           {email ? (
             <>

@@ -5,6 +5,7 @@ import { Footer } from "../components/Footer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSession } from "../hooks/useSession";
+import { getSession } from "../hooks/getSession";
 
 export function DeliveryAndSize() {
     const location = useLocation();
@@ -13,19 +14,39 @@ export function DeliveryAndSize() {
     const [error, setError] = useState("");
     const [freq, setFreq] = useState("");
     const [opt, setOpt] = useState("");
-    const { checkSession, updateSession } = useSession();
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
         if (!freq || !opt) {
             setError("Alege cantitatea si frecventa livrarii");
-            setLoading(false);
+            await setLoading(false);
             return;
         }
         try {
-            updateSession({ freq: freq, size: opt });
-            navigate("/specific");
+            const res = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/session`, {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ freq: freq, size: opt }),
+            });
+            if (!res.ok) throw new Error("Failed to update session");
+            const priceId = "";
+            const session = await getSession();
+            const customerEmail = session.email;
+            // if (opt === "Mediu") return;
+            const resStripe = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/create-checkout-session`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    priceId,
+                    customerEmail,
+                    success_url: `${window.location.origin}/thank-you`,
+                    cancel_url: `${window.location.origin}/cancel`,
+                }),
+            });
         }
         catch (error) {
             setLoading(false);

@@ -16,7 +16,6 @@ export function GetStarted() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { updateSession } = useSession();
 
     useEffect(() => { if (!error) return; const t = setTimeout(() => setError(""), 4000); return () => clearTimeout(t); }, [error]);
     async function handleSubmit(e: React.FormEvent) {
@@ -43,11 +42,13 @@ export function GetStarted() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ id, offer }),
                     });
-                    localStorage.setItem("userSession", JSON.stringify({
-                        userId: id,
-                        email,
-                        offer,
-                    }));
+                    const res = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/session`, {
+                        method: "PATCH",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: id, email: email, offer: offer }),
+                    });
+                    if (!res.ok) throw new Error("Failed to update session");
                     navigate('/plans', { state: { userId: id } });
                 }
                 else {
@@ -58,7 +59,13 @@ export function GetStarted() {
                     });
                     const answ = await resp.json();
                     const id = answ.id;
-                    updateSession({ offer: offer, email: email })
+                    const res = await fetch(`${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/session`, {
+                        method: "PATCH",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: id, email: email, offer: offer }),
+                    });
+                    if (!res.ok) throw new Error("Failed to update session");
                     navigate('/plans', { state: { userId: id } });
                 }
             }

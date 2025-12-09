@@ -4,49 +4,106 @@ import { Footer } from "../components/Footer";
 import { Option } from "../components/FreeOptions";
 import { Leaf } from "lucide-react";
 import { Offer } from "../components/Offer";
-import { useSession } from "../hooks/useSession";
+
+type SessionField = "anonymous" | "userId" | "email" | "size" | "freq" | "offer" | "plan";
+
+const SESSION_BASE_URL = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL;
+
+async function updateSessionOnServer(patch: Partial<Record<SessionField, unknown>>) {
+    const res = await fetch(`${SESSION_BASE_URL}/session`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patch),
+    });
+    if (!res.ok) {
+        throw new Error(`Failed to update session: ${res.status}`);
+    }
+    return res.json();
+}
+
+async function checkSessionOnServer(requiredFields: SessionField[]): Promise<boolean> {
+    const res = await fetch(`${SESSION_BASE_URL}/session/check`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requiredFields }),
+    });
+    if (!res.ok) {
+        throw new Error(`Failed to check session: ${res.status}`);
+    }
+    const data = await res.json();
+    return Boolean(data.valid);
+}
 
 export function Plans() {
     const location = useLocation();
     const navigate = useNavigate();
+
     const [plan, setPlan] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const { updateSession, checkSession } = useSession();
-    useEffect(() => { if (!error) return; const t = setTimeout(() => setError(""), 4000); return () => clearTimeout(t); }, [error]);
+
+    useEffect(() => {
+        if (!error) return;
+        const t = setTimeout(() => setError(""), 4000);
+        return () => clearTimeout(t);
+    }, [error]);
+
     async function handleSubmit(e: React.FormEvent) {
-        setLoading(true);
         e.preventDefault();
-        try {
-            if (!plan) {
-                setError("Alege un plan");
-                setLoading(false);
-                return;
-            }
-            updateSession({ plan: plan });
-            navigate("/delivery-and-size");
+
+        if (!plan) {
+            setError("Alege un plan");
+            return;
         }
-        catch (error) {
+
+        setLoading(true);
+        try {
+            await updateSessionOnServer({ plan });
+
+            navigate("/delivery-and-size");
+        } catch (err) {
+            console.error("Failed to update session", err);
+            setError("A apărut o problemă, încearcă din nou.");
+        } finally {
             setLoading(false);
-            throw error;
         }
     }
 
     const userId = location.state?.userId;
-    console.log(userId);
+
     useEffect(() => {
-        const userId = location.state?.userId;
-        if (!checkSession(['offer', 'email'])) {
-            navigate("/get-started");
-            return;
-        }
-        if (!userId) {
-            navigate("/get-started");
-        }
-    }, [checkSession, userId, navigate]);
+        let cancelled = false;
 
-    if (!userId) return null;
+        async function guardRoute() {
+            try {
+                const isValid = await checkSessionOnServer(["offer", "email"]);
+                if (cancelled) return;
 
+                if (!isValid) {
+                    navigate("/get-started");
+                    return;
+                }
+
+                if (!userId) {
+                    navigate("/get-started");
+                }
+            } catch (err) {
+                console.error("Failed to check session", err);
+                if (!cancelled) {
+                    navigate("/get-started");
+                }
+            }
+        }
+
+        guardRoute();
+        return () => {
+            cancelled = true;
+        };
+    }, [userId, navigate]);
+
+    if (!userId) return null; 
     return (<>
         <div className="flex flex-col mb-16">
             <Offer></Offer>
@@ -74,7 +131,7 @@ export function Plans() {
                         </button>
                     </div>
                 </div>
-                <p className={`text-red-700 text-center ${error ? "display-none" : "display-block"}`}>{error}</p>
+                <p className={`text - red - 700 text - center ${error ? "display-none" : "display-block"}`}>{error}</p>
             </form >
         </div >
         <Footer></Footer>

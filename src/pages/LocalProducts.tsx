@@ -10,7 +10,7 @@ export function LocalProducts() {
             <script type="application/ld+json">{JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "Article",
-                "headline": "Produse locale: calitatea a doua, prețuri și risipa",
+                "headline": "Produse locale: cea mai buna calitate, prețuri și risipa",
                 "author": { "@type": "Organization", "name": "Greenmart" },
                 "publisher": { "@type": "Organization", "name": "Greenmart", "logo": { "@type": "ImageObject", "url": "https://greenmart.ro/android-chrome-512x512.png" } },
                 "image": ["https://greenmart.ro/legume-urate.jpg"],
