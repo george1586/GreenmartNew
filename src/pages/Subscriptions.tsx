@@ -1,4 +1,3 @@
-// src/pages/Subscriptions.tsx
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
 import {
@@ -13,42 +12,12 @@ import {
     CheckCircle2,
 } from "lucide-react";
 import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
+import { Container } from "../components/ui/Container";
+import { Button } from "../components/ui/Button";
 import { Helmet } from "react-helmet-async";
-// în JSX:
-<Helmet>
-    <title>Abonamente Greenmart – cutii cu legume locale</title>
-    <link rel="canonical" href="https://greenmart.ro/subscriptii" />
-    <script type="application/ld+json">{JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "itemListElement": [
-            {
-                "@type": "ListItem", "position": 1,
-                "item": {
-                    "@type": "Product",
-                    "name": "Green Box – Abonament lunar",
-                    "image": ["https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"],
-                    "description": "Cutie săptămânală pentru 1–2 persoane, 4–6 kg livrate săptămânal.",
-                    "brand": "Greenmart",
-                    "offers": { "@type": "Offer", "priceCurrency": "RON", "price": "299", "availability": "https://schema.org/InStock", "url": "https://greenmart.ro/subscriptii" }
-                }
-            },
-            {
-                "@type": "ListItem", "position": 2,
-                "item": {
-                    "@type": "Product",
-                    "name": "Pro Box – Abonament lunar",
-                    "image": ["https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"],
-                    "description": "Cutie săptămânală pentru familii, 10–12 kg livrate săptămânal.",
-                    "brand": "Greenmart",
-                    "offers": { "@type": "Offer", "priceCurrency": "RON", "price": "550", "availability": "https://schema.org/InStock", "url": "https://greenmart.ro/subscriptii" }
-                }
-            }
-        ]
-    })}</script>
-</Helmet>
 
-// 🔗 Edge Functions URL (configurează prin .env dacă vrei)
+// Edge Functions URL
 const FUNCTIONS_BASE =
     (import.meta.env.VITE_SUPABASE_FUNCTIONS_URL as string) ||
     "https://hasxcndrhvtyjphntpft.functions.supabase.co";
@@ -59,6 +28,7 @@ type StripePrice = {
     currency: string;
     unit_amount: number | null;
     product?: string | null;
+    product_name?: string | null;
 };
 type StripeItem = { id: string; price: StripePrice; quantity: number | null };
 type StripeSub = {
@@ -73,10 +43,13 @@ type StripeSub = {
     | "unpaid"
     | "paused";
     cancel_at_period_end: boolean;
-    current_period_end: number; // unix seconds
+    current_period_end: number; 
     items: StripeItem[];
     created: number;
     latest_invoice?: string | null;
+    is_test?: boolean;
+    custom_items?: { name: string; quantity: number }[];
+    metadata?: Record<string, string>;
 };
 
 export default function Subscriptions() {
@@ -114,7 +87,7 @@ export default function Subscriptions() {
         fetchSubs();
     }, []);
 
-    async function onCancel(id: string) {
+    async function onCancel(id: string, is_test?: boolean) {
         if (!confirm("Sigur vrei să anulezi la sfârșitul perioadei curente?")) return;
         try {
             setWorkingId(id);
@@ -125,7 +98,7 @@ export default function Subscriptions() {
             const res = await fetch(`${FUNCTIONS_BASE}/cancel-subscription`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ subscription_id: id, immediate: false }),
+                body: JSON.stringify({ subscription_id: id, immediate: false, is_test }),
             });
             if (!res.ok) throw new Error(await res.text());
             await fetchSubs();
@@ -140,72 +113,79 @@ export default function Subscriptions() {
     const hasSubs = (subs?.length ?? 0) > 0;
 
     return (
-        <>
-            <Header></Header>
-            <main className="max-w-6xl mx-auto px-6 py-12 text-gray-800">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Abonamentele mele</h1>
-                        <p className="text-gray-600 mt-1">
-                            Vezi starea abonamentelor și gestionează anularea la sfârșitul perioadei.
-                        </p>
-                    </div>
-                    <button
-                        onClick={fetchSubs}
-                        className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium hover:bg-gray-50"
-                    >
-                        <RefreshCw className="h-4 w-4" />
-                        Reîncarcă
-                    </button>
-                </div>
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+            <Helmet>
+                <title>Abonamente Greenmart – cutii cu legume locale</title>
+                <link rel="canonical" href="https://greenmart.ro/subscriptii" />
+            </Helmet>
 
-                {/* Error banner */}
-                {error && (
-                    <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4" />
-                        {error}
+            <Header />
+            <main className="flex-grow py-12">
+                <Container>
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+                        <div>
+                            <h1 className="text-3xl font-bold tracking-tight text-farm-dark">Abonamentele mele</h1>
+                            <p className="text-gray-600 mt-1">
+                                Vezi starea abonamentelor și gestionează livrările.
+                            </p>
+                        </div>
+                        <Button
+                            onClick={fetchSubs}
+                            variant="ghost"
+                            className="gap-2 bg-white shadow-sm border border-gray-200"
+                        >
+                            <RefreshCw className="h-4 w-4" />
+                            Reîncarcă
+                        </Button>
                     </div>
-                )}
 
-                {/* Loading skeleton */}
-                {loading && (
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {Array.from({ length: 2 }).map((_, i) => (
-                            <div key={i} className="border rounded-2xl p-5">
-                                <div className="h-5 w-40 bg-gray-100 rounded animate-pulse mb-4" />
-                                <div className="space-y-2">
-                                    <div className="h-4 w-56 bg-gray-100 rounded animate-pulse" />
-                                    <div className="h-4 w-44 bg-gray-100 rounded animate-pulse" />
-                                    <div className="h-4 w-64 bg-gray-100 rounded animate-pulse" />
+                    {/* Error banner */}
+                    {error && (
+                        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4" />
+                            {error}
+                        </div>
+                    )}
+
+                    {/* Loading skeleton */}
+                    {loading && (
+                        <div className="grid md:grid-cols-2 gap-6">
+                            {Array.from({ length: 2 }).map((_, i) => (
+                                <div key={i} className="border rounded-2xl p-6 bg-white shadow-sm">
+                                    <div className="h-6 w-40 bg-gray-100 rounded animate-pulse mb-4" />
+                                    <div className="space-y-3">
+                                        <div className="h-4 w-56 bg-gray-100 rounded animate-pulse" />
+                                        <div className="h-4 w-44 bg-gray-100 rounded animate-pulse" />
+                                    </div>
                                 </div>
-                                <div className="mt-5 h-9 w-64 bg-gray-100 rounded-xl animate-pulse" />
-                            </div>
-                        ))}
-                    </div>
-                )}
+                            ))}
+                        </div>
+                    )}
 
-                {/* Content */}
-                {!loading && !error && (
-                    <>
-                        {hasSubs ? (
-                            <div className="grid md:grid-cols-2 gap-6">
-                                {subs!.map((s) => (
-                                    <SubscriptionCard
-                                        key={s.id}
-                                        sub={s}
-                                        onCancel={() => onCancel(s.id)}
-                                        working={workingId === s.id}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <EmptyState />
-                        )}
-                    </>
-                )}
+                    {/* Content */}
+                    {!loading && !error && (
+                        <>
+                            {hasSubs ? (
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {subs!.map((s) => (
+                                        <SubscriptionCard
+                                            key={s.id}
+                                            sub={s}
+                                            onCancel={() => onCancel(s.id, s.is_test)}
+                                            working={workingId === s.id}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <EmptyState />
+                            )}
+                        </>
+                    )}
+                </Container>
             </main>
-        </>
+            <Footer />
+        </div>
     );
 }
 
@@ -230,32 +210,41 @@ function SubscriptionCard({
         );
     }, [price]);
 
-    const nickname = price?.nickname ?? "Plan";
+    const nickname = price?.nickname || price?.product_name || "Plan";
     const created = new Date(sub.created * 1000).toLocaleString("ro-RO");
-    const renews = new Date(sub.current_period_end * 1000).toLocaleString("ro-RO");
+    
+    // const renews = new Date(sub.current_period_end * 1000).toLocaleString("ro-RO"); 
+    // ^ unused in original but useful, keeping commented or re-enabling if needed.
 
     const statusUi = getStatusUi(sub.status, sub.cancel_at_period_end);
 
     return (
-        <div className="rounded-2xl border p-5 shadow-sm hover:shadow transition-shadow bg-white">
+        <div className="rounded-2xl border p-6 shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col">
             {/* Title row */}
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                    <h2 className="text-lg font-semibold">{nickname}</h2>
+                    <h2 className="text-lg font-bold text-farm-dark">{nickname}</h2>
                     <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                        <span className="inline-flex items-center gap-1">
+                        {sub.is_test && (
+                            <span className="inline-flex items-center gap-1 rounded bg-yellow-100 px-2 py-0.5 text-xs font-bold text-yellow-800 uppercase border border-yellow-200">
+                                Test
+                            </span>
+                        )}
+                        <span className="inline-flex items-center gap-1 font-medium text-farm-green">
                             <CreditCard className="h-4 w-4" /> {amount}
-                            {item?.quantity ? <span className="text-gray-400"> · {item.quantity} buc</span> : null}
                         </span>
-                        <span className="inline-flex items-center gap-1">
-                            <CalendarDays className="h-4 w-4" /> Creat: {created}
-                        </span>
+                        {item?.quantity && (
+                             <span className="text-gray-400"> · {item.quantity} buc</span>
+                        )}
+                    </div>
+                     <div className="mt-1 text-xs text-gray-500 flex items-center gap-1">
+                        <CalendarDays className="h-3 w-3" /> Creat: {created}
                     </div>
                 </div>
 
                 {/* Status badge */}
                 <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${statusUi.badge}`}
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${statusUi.badge}`}
                     title={statusUi.title}
                 >
                     {statusUi.icon}
@@ -263,35 +252,58 @@ function SubscriptionCard({
                 </span>
             </div>
 
+            {/* Custom Items List */}
+            {sub.custom_items && sub.custom_items.length > 0 && (
+                <div className="mb-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                   <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Conținut Pachet:</h4>
+                   <ul className="text-sm space-y-1 text-gray-700">
+                       {sub.custom_items.map((ci, idx) => (
+                           <li key={idx} className="flex justify-between">
+                               <span>{ci.name}</span>
+                               <span className="font-mono font-medium text-gray-500">x{ci.quantity}</span>
+                           </li>
+                       ))}
+                   </ul>
+                </div>
+            )}
+
+            {/* Free Gift Display */}
+            {sub.metadata?.offer && sub.metadata.offer !== "None" && (
+                 <div className="mb-4 px-3 py-2 bg-yellow-50 rounded-xl border border-yellow-100 flex items-center gap-2">
+                    <span className="text-xl">🎁</span>
+                    <div>
+                        <h4 className="text-[10px] font-bold text-yellow-800 uppercase tracking-wide">Cadou Selectat:</h4>
+                        <p className="text-sm font-medium text-yellow-900">{sub.metadata.offer}</p>
+                    </div>
+                 </div>
+            )}
+
             {/* Info note if scheduled to cancel */}
             {sub.cancel_at_period_end && (
-                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 text-sm flex items-center gap-2">
+                <div className="mt-auto mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-amber-800 text-sm flex items-center gap-2">
                     <PauseCircle className="h-4 w-4" />
-                    Abonamentul este programat pentru anulare la sfârșitul perioadei curente.
+                    Abonamentul se va încheia la sfârșitul perioadei curente.
                 </div>
             )}
 
             {/* Actions */}
-            <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                    disabled={working || sub.status !== "active" || sub.cancel_at_period_end}
-                    onClick={onCancel}
-                    className="inline-flex items-center gap-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 disabled:opacity-60"
-                    title="Programează anularea la finalul perioadei curente"
-                >
-                    {working ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
-                    {working ? "Se procesează…" : "Anulează la sfârșitul perioadei"}
-                </button>
-
-                {/* (optional) aici poți adăuga un buton către portalul de billing dacă ai endpoint pentru el */}
-                {/* <a href="/billing-portal" className="inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm hover:bg-gray-50">
-          <ExternalLink className="h-4 w-4" /> Gestionare facturi
-        </a> */}
+            <div className={`mt-auto pt-4 border-t border-gray-100 flex flex-wrap gap-3 ${sub.cancel_at_period_end ? 'pt-0 border-none' : ''}`}>
+                 {!sub.cancel_at_period_end && (
+                    <button
+                        disabled={working || sub.status !== "active" || sub.cancel_at_period_end}
+                        onClick={onCancel}
+                        className="inline-flex items-center gap-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-sm px-4 py-2 disabled:opacity-60 transition-colors font-medium ml-auto"
+                        title="Programează anularea la finalul perioadei curente"
+                    >
+                        {working ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
+                        {working ? "Se procesează…" : "Anulează Abonamentul"}
+                    </button>
+                 )}
             </div>
 
             {/* Footer tiny details */}
-            <div className="mt-4 text-xs text-gray-500">
-                ID abonament: {sub.id} {sub.latest_invoice ? `· Factură: ${sub.latest_invoice}` : ""}
+            <div className="mt-4 text-[10px] text-gray-400 font-mono">
+                ID: {sub.id}
             </div>
         </div>
     );
@@ -299,21 +311,18 @@ function SubscriptionCard({
 
 function EmptyState() {
     return (
-        <div className="rounded-2xl border p-10 text-center bg-white">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
+        <div className="rounded-2xl border-2 border-dashed border-gray-200 p-10 text-center bg-gray-50/50 col-span-full">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100">
+                <CheckCircle2 className="h-8 w-8 text-farm-green/50" />
             </div>
-            <h3 className="text-lg font-semibold">Nu ai abonamente active în acest moment</h3>
-            <p className="mt-1 text-sm text-gray-600">
-                Când cumperi un abonament, îl vei vedea aici și îl poți gestiona oricând.
+            <h3 className="text-lg font-bold text-gray-900">Nu ai abonamente active</h3>
+            <p className="mt-2 text-sm text-gray-500 max-w-sm mx-auto">
+                Nu ai niciun abonament activ în acest moment. Alege un plan pentru a începe livrările.
             </p>
             <div className="mt-6">
-                <a
-                    href="/"
-                    className="inline-flex items-center rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm px-5 py-2.5"
-                >
-                    Vezi planurile
-                </a>
+                <Button onClick={() => window.location.href = "/plans"}>
+                    Vezi Planurile
+                </Button>
             </div>
         </div>
     );

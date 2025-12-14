@@ -23,28 +23,35 @@ import { CustomPlan } from "./pages/CustomPlan";
 import { AdminGuard } from "./components/AdminGuard";
 import { p } from "framer-motion/client";
 
+import { RootLayout } from "./components/RootLayout";
+
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/auth", element: <Auth /> },
-  { path: "/thank-you", element: <ThankYou /> },
-  { path: "/cancel", element: <Cancel /> },
-  { path: "/termeni", element: <TermsAndConditions /> },
-  { path: "/confidentialitate", element: <Confidentialitate /> },
-  { path: "/subscriptii", element: <Subscriptions /> },
-  { path: "/producatori", element: <Producers /> },
-  { path: "/produse-locale", element: <LocalProducts /> },
-  { path: "/get-started", element: <GetStarted /> },
-  { path: "/login", element: <Auth /> },
-  { path: "/plans", element: <Plans /> },
-  { path: "/delivery-and-size", element: <DeliveryAndSize /> },
-  { path: "/custom-plan", element: <CustomPlan/> },
   {
-    path: "/admin", element: (
-      <AdminGuard>
-        <AdminProductsPage />
-      </AdminGuard>
-    )
-  },
+    element: <RootLayout />,
+    children: [
+        { path: "/", element: <Home /> },
+        { path: "/auth", element: <Auth /> },
+        { path: "/thank-you", element: <ThankYou /> },
+        { path: "/cancel", element: <Cancel /> },
+        { path: "/termeni", element: <TermsAndConditions /> },
+        { path: "/confidentialitate", element: <Confidentialitate /> },
+        { path: "/subscriptii", element: <Subscriptions /> },
+        { path: "/producatori", element: <Producers /> },
+        { path: "/produse-locale", element: <LocalProducts /> },
+        { path: "/get-started", element: <GetStarted /> },
+        { path: "/login", element: <Auth /> },
+        { path: "/plans", element: <Plans /> },
+        { path: "/delivery-and-size", element: <DeliveryAndSize /> },
+        { path: "/custom-plan", element: <CustomPlan/> },
+        {
+            path: "/admin", element: (
+            <AdminGuard>
+                <AdminProductsPage />
+            </AdminGuard>
+            )
+        },
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

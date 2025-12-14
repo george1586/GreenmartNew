@@ -1,121 +1,182 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-language" content="ro-RO" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#16a34a" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-language" content="ro-RO" />
-  <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="theme-color" content="#16a34a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <title>Produse locale Timișoara – cutii cu legume de la producători locali | Greenmart</title>
-  <meta name="description"
-    content="Greenmart livrează săptămânal cutii cu legume, fructe și produse artizanale de la producători locali din Timișoara. Abonamente flexibile, proaspăt și sustenabil." />
-  <link rel="canonical" href="https://greenmart.ro/" />
+    <title>
+      Produse locale Timișoara – cutii cu legume de la producători locali |
+      Greenmart
+    </title>
+    <meta
+      name="description"
+      content="Greenmart livrează săptămânal cutii cu legume, fructe și produse artizanale de la producători locali din Timișoara. Abonamente flexibile, proaspăt și sustenabil."
+    />
+    <link rel="canonical" href="https://greenmart.ro/" />
 
-  <!-- Favicons -->
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico?v=1">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=1">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1">
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico?v=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png?v=1"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png?v=1"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png?v=1"
+    />
 
+    <!-- Preconnect pentru imaginile din Supabase (mai rapid la prima încărcare) -->
+    <link
+      rel="preconnect"
+      href="https://hasxcndrhvtyjphntpft.supabase.co"
+      crossorigin
+    />
 
-  <!-- Preconnect pentru imaginile din Supabase (mai rapid la prima încărcare) -->
-  <link rel="preconnect" href="https://hasxcndrhvtyjphntpft.supabase.co" crossorigin />
+    <!-- Open Graph -->
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Greenmart" />
+    <meta property="og:title" content="Produse locale Timișoara | Greenmart" />
+    <meta
+      property="og:description"
+      content="Cutiile cu legume, fructe și produse artizanale de la producători locali din Timișoara. Comandă online, proaspăt și sustenabil."
+    />
+    <meta property="og:url" content="https://greenmart.ro/" />
+    <meta
+      property="og:image"
+      content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-  <!-- Open Graph -->
-  <meta property="og:locale" content="ro_RO" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Greenmart" />
-  <meta property="og:title" content="Produse locale Timișoara | Greenmart" />
-  <meta property="og:description"
-    content="Cutiile cu legume, fructe și produse artizanale de la producători locali din Timișoara. Comandă online, proaspăt și sustenabil." />
-  <meta property="og:url" content="https://greenmart.ro/" />
-  <meta property="og:image"
-    content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Produse locale Timișoara | Greenmart" />
+    <meta
+      name="twitter:description"
+      content="Cutiile cu legume și fructe de la producători locali din Timișoara."
+    />
+    <meta
+      name="twitter:image"
+      content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg"
+    />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Produse locale Timișoara | Greenmart" />
-  <meta name="twitter:description" content="Cutiile cu legume și fructe de la producători locali din Timișoara." />
-  <meta name="twitter:image"
-    content="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg" />
-
-  <!-- Structured data: WebSite + Organization + LocalBusiness -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "name": "Greenmart",
-          "url": "https://greenmart.ro/",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://greenmart.ro/cauta?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
-        },
-        {
-          "@type": "Organization",
-          "name": "Greenmart",
-          "url": "https://greenmart.ro/",
-          "logo": "https://greenmart.ro/android-chrome-512x512.png",
-          "sameAs": [
-            "https://www.facebook.com/greenmart",
-            "https://www.instagram.com/greenmart"
-          ]
-        },
-        {
-          "@type": "GroceryStore",
-          "name": "Greenmart",
-          "url": "https://greenmart.ro/",
-          "image": "https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg",
-          "telephone": "+40 742 220 938",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Timișoara",
-            "addressCountry": "RO"
+    <!-- Structured data: WebSite + Organization + LocalBusiness -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "Greenmart",
+            "url": "https://greenmart.ro/",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://greenmart.ro/cauta?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
           },
-          "areaServed": { "@type": "City", "name": "Timișoara" },
-          "openingHoursSpecification": [{
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-            "opens": "09:00",
-            "closes": "18:00"
-          }]
-        }
-      ]
-    }
-  </script>
-  <!-- Meta Pixel Code -->
-  <script>
-    !function (f, b, e, v, n, t, s) {
-      if (f.fbq) return; n = f.fbq = function () {
-        n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-      n.queue = []; t = b.createElement(e); t.async = !0;
-      t.src = v; s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '770536062251831');
-    fbq('track', 'PageView');
-  </script>
-  <!-- End Meta Pixel Code -->
-</head>
+          {
+            "@type": "Organization",
+            "name": "Greenmart",
+            "url": "https://greenmart.ro/",
+            "logo": "https://greenmart.ro/android-chrome-512x512.png",
+            "sameAs": [
+              "https://www.facebook.com/greenmart",
+              "https://www.instagram.com/greenmart"
+            ]
+          },
+          {
+            "@type": "GroceryStore",
+            "name": "Greenmart",
+            "url": "https://greenmart.ro/",
+            "image": "https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/og-hero.jpeg",
+            "telephone": "+40 742 220 938",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Timișoara",
+              "addressCountry": "RO"
+            },
+            "areaServed": { "@type": "City", "name": "Timișoara" },
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "770536062251831");
+      fbq("track", "PageView");
+    </script>
+    <!-- End Meta Pixel Code -->
+  </head>
 
-<body class="bg-gray-50">
-  <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=770536062251831&ev=PageView&noscript=1" /></noscript>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body class="bg-gray-50">
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=770536062251831&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

@@ -2,42 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --radius: 1.25rem;
+  --radius: 12px;
 }
 
-.card {
-  @apply bg-white rounded-2xl shadow-md;
+@layer base {
+  body {
+    @apply font-sans antialiased text-gray-800 bg-farm-cream;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display tracking-tight text-farm-dark;
+  }
 }
 
-.btn {
-  @apply inline-flex items-center justify-center rounded-xl text-xl px-4 py-3 font-bold transition;
-}
-
-.btn-primary {
-  /* Primary CTA: solid organic orange as requested (#FF8C42)
-     Features: definitive size via utility classes on elements, rounded corners, soft shadow, hover lift. */
-  @apply text-white focus:outline-none;
-  background-color: #FF8C42;
-  border-radius: 0.75rem;
-  /* 12px */
-  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  font-weight: bold;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  background-color: #FF9A60;
-  /* ~10% lighter */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-}
-
-.btn-primary:focus {
-  box-shadow: 0 6px 18px rgba(255, 138, 66, 0.12);
+/* Optional helper classes, though we prefer React components */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
 }

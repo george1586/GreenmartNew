@@ -1,106 +1,188 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-type StripeList<T> = { data: T[] };
-type StripeCustomer = { id: string; email?: string | null };
-type StripePrice = { id: string; nickname: string | null; currency: string; unit_amount: number | null; product?: string | null };
-type StripeItem = { id: string; price: StripePrice; quantity: number | null };
-type StripeSubscription = {
-    id: string; status: string; cancel_at_period_end: boolean; current_period_end: number;
-    items: { data: StripeItem[] }; created: number; latest_invoice?: string | null; customer: string;
-};
-
-const STRIPE_KEY = Deno.env.get("STRIPE_SECRET_KEY")!;
+const LIVE_KEY = Deno.env.get("STRIPE_SECRET_KEY")!;
+const TEST_KEY = Deno.env.get("STRIPE_SECRET_KEY_TEST")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-// ✅ CORS
+// CORS Helpers
 const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") ?? "").split(",").map(s => s.trim()).filter(Boolean);
-// e.g. ALLOWED_ORIGINS=https://greenmart.ro,http://localhost:5173
+
 function corsHeaders(req: Request) {
     const origin = req.headers.get("origin") ?? "";
     const allow = ALLOWED_ORIGINS.length ? (ALLOWED_ORIGINS.includes(origin) ? origin : "") : "*";
     return {
-        "Access-Control-Allow-Origin": allow || "null",
+        "Access-Control-Allow-Origin": allow,
         "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-        "Access-Control-Allow-Headers": "authorization,content-type",
+        "Access-Control-Allow-Headers": "authorization, assign, content-type, apikey, x-client-info",
         "Access-Control-Max-Age": "86400",
     };
 }
+
 function withCors(req: Request, init: ResponseInit = {}, body?: BodyInit | null) {
     return new Response(body, { ...init, headers: { ...(init.headers || {}), ...corsHeaders(req) } });
 }
 
-function qs(p: Record<string, string>) { return new URLSearchParams(p).toString(); }
-async function stripe(path: string, init?: RequestInit) {
-    const headers = { Authorization: `Bearer ${STRIPE_KEY}`, "Content-Type": "application/x-www-form-urlencoded" };
-    return fetch(`https://api.stripe.com/v1${path}`, { ...init, headers: { ...headers, ...(init?.headers || {}) } });
-}
+// Auth Helper
 async function getUserFromToken(bearer: string) {
-    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { Authorization: bearer, apikey: SUPABASE_ANON_KEY } });
+    const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, { 
+        headers: { Authorization: bearer, apikey: SUPABASE_ANON_KEY } 
+    });
     if (!r.ok) return null;
     return r.json();
 }
 
-Deno.serve(async (req) => {
-    // CORS preflight
-    if (req.method === "OPTIONS") return withCors(req, { status: 204 });
+// Helper: Fetch Item Names from Supabase
+async function fetchItemNames(ids: number[]) {
+    if (ids.length === 0) return {};
+    try {
+        const query = `id=in.(${ids.join(",")})&select=id,name`;
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/items?${query}`, {
+            headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+        });
+        if (!res.ok) return {};
+        const data: { id: number; name: string }[] = await res.json();
+        const map: Record<number, string> = {};
+        data.forEach(d => map[d.id] = d.name);
+        return map;
+    } catch {
+        return {};
+    }
+}
 
-    if (req.method !== "GET")
-        return withCors(req, { status: 405 }, "Method not allowed");
+// Stripe Helper
+async function fetchStripeSubs(apiKey: string, email: string) {
+    if (!apiKey) return [];
+    
+    const headers = { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/x-www-form-urlencoded" };
+    
+    try {
+        // 1. Search customer
+        const query = `email:'${email}'`;
+        const searchRes = await fetch(`https://api.stripe.com/v1/customers/search?query=${encodeURIComponent(query)}`, { headers });
+        if (!searchRes.ok) return [];
+        
+        const searchJson = await searchRes.json();
+        const customers = searchJson.data || [];
+        if (customers.length === 0) return [];
+
+        // 2. Fetch subscriptions for ALL found customers (in parallel)
+        const subPromises = customers.map(async (c: any) => {
+            const res = await fetch(`https://api.stripe.com/v1/subscriptions?customer=${c.id}&limit=100&expand[]=data.items.data.price&status=all`, { headers });
+            if (!res.ok) return [];
+            const json = await res.json();
+            return json.data || [];
+        });
+
+        const results = await Promise.all(subPromises);
+        const subs: any[] = results.flat();
+
+        // 3. Manually fetch products to get names
+        const productIds = new Set<string>();
+        subs.forEach(s => {
+            s.items?.data?.forEach((i: any) => {
+                if (i.price?.product) productIds.add(i.price.product as string);
+            });
+        });
+
+        const productMap = new Map<string, string>();
+        if (productIds.size > 0) {
+            await Promise.all(Array.from(productIds).map(async (pid) => {
+                const pRes = await fetch(`https://api.stripe.com/v1/products/${pid}`, { headers });
+                if (pRes.ok) {
+                    const pData = await pRes.json();
+                    productMap.set(pid, pData.name);
+                }
+            }));
+        }
+
+        // 4. Attach product names
+        subs.forEach(s => {
+            s.items?.data?.forEach((i: any) => {
+                if (i.price?.product) {
+                    i.price.product_name = productMap.get(i.price.product as string) || null;
+                }
+            });
+            s.__is_test_mode = apiKey.startsWith("sk_test");
+        });
+        
+        return subs;
+    } catch (err) {
+        console.error("Error fetching stripe subs:", err);
+        return [];
+    }
+}
+
+Deno.serve(async (req) => {
+    if (req.method === "OPTIONS") return withCors(req, { status: 204 });
+    if (req.method !== "GET") return withCors(req, { status: 405 }, "Method not allowed");
 
     const auth = req.headers.get("authorization");
-    if (!auth?.startsWith("Bearer "))
-        return withCors(req, { status: 401 }, "Missing authorization header");
+    if (!auth?.startsWith("Bearer ")) return withCors(req, { status: 401 }, "Missing authorization header");
 
     const user = await getUserFromToken(auth);
     if (!user?.email) return withCors(req, { status: 401 }, "Unauthorized");
 
-    // 1) customer_id din metadata dacă există
-    let customerId: string | null =
-        user.user_metadata?.stripe_customer_id ??
-        user.app_metadata?.stripe_customer_id ??
-        null;
+    // Fetch from BOTH environments in parallel
+    const [liveSubs, testSubs] = await Promise.all([
+        fetchStripeSubs(LIVE_KEY, user.email),
+        fetchStripeSubs(TEST_KEY, user.email)
+    ]);
 
-    // 2) fallback: căutare după email (atenție: test/live key)
-    if (!customerId) {
-        const search = await stripe(`/customers/search?${qs({ query: `email:'${user.email}'` })}`, { method: "GET" });
-        if (!search.ok) {
-            const t = await search.text(); console.error("Stripe search error:", t);
-            return withCors(req, { status: 502 }, "Stripe error");
+    const allSubs = [...liveSubs, ...testSubs];
+
+    // Collect all custom item IDs across all subscriptions
+    const allCustomItemIds = new Set<number>();
+    allSubs.forEach(s => {
+        if (s.metadata?.custom_cart) {
+            try {
+                const cart = JSON.parse(s.metadata.custom_cart);
+                Object.keys(cart).forEach(id => allCustomItemIds.add(Number(id)));
+            } catch {}
         }
-        const json = (await search.json()) as StripeList<StripeCustomer>;
-        customerId = json.data?.[0]?.id ?? null;
-    }
+    });
 
-    // 3) fără customer -> listă goală
-    if (!customerId) {
-        return withCors(req, { status: 200, headers: { "Content-Type": "application/json" } }, JSON.stringify({ subscriptions: [] }));
-    }
+    // Fetch names for these items from Supabase
+    const itemNames = await fetchItemNames(Array.from(allCustomItemIds));
 
-    // 4) listează subs
-    const subsRes = await stripe(`/subscriptions?customer=${customerId}&limit=20&expand[]=data.items.data.price`);
-    if (!subsRes.ok) {
-        const t = await subsRes.text(); console.error("Stripe subs error:", t);
-        return withCors(req, { status: 502 }, "Stripe error");
-    }
+    // Normalize
+    const normalized = allSubs.map((s) => {
+        let customItems: { name: string; quantity: number }[] = [];
+        if (s.metadata?.custom_cart) {
+            try {
+                const cart = JSON.parse(s.metadata.custom_cart);
+                customItems = Object.entries(cart).map(([id, qty]) => ({
+                    name: itemNames[Number(id)] || "Produs",
+                    quantity: Number(qty)
+                }));
+            } catch {}
+        }
 
-    const list = await subsRes.json() as StripeList<StripeSubscription>;
-    const normalized = list.data.map((s) => ({
-        id: s.id,
-        status: s.status,
-        cancel_at_period_end: s.cancel_at_period_end,
-        current_period_end: s.current_period_end,
-        created: s.created,
-        latest_invoice: s.latest_invoice ?? null,
-        items: s.items.data.map((it) => ({
-            id: it.id,
-            quantity: it.quantity,
-            price: {
-                id: it.price.id, nickname: it.price.nickname, currency: it.price.currency,
-                unit_amount: it.price.unit_amount, product: it.price.product ?? null,
-            },
-        })),
-    }));
+        return {
+            id: s.id,
+            status: s.status,
+            cancel_at_period_end: s.cancel_at_period_end,
+            current_period_end: s.current_period_end,
+            created: s.created,
+            latest_invoice: s.latest_invoice ?? null,
+            is_test: !!s.__is_test_mode,
+            items: s.items.data.map((it: any) => {
+                return {
+                    id: it.id,
+                    quantity: it.quantity,
+                    price: {
+                        id: it.price.id, 
+                        nickname: it.price.nickname, 
+                        product_name: it.price.product_name ?? null, 
+                        currency: it.price.currency,
+                        unit_amount: it.price.unit_amount, 
+                    },
+                };
+            }),
+            custom_items: customItems,
+            metadata: s.metadata, // <--- Pass all metadata found in Stripe
+        };
+    });
 
     return withCors(req, { headers: { "Content-Type": "application/json" } }, JSON.stringify({ subscriptions: normalized }));
 });
