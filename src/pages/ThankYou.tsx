@@ -1,16 +1,9 @@
 import { Header } from "../components/Header"
 import { useSearchParams, Link } from "react-router-dom"
-import { useEffect } from "react";
-import { fbqTrack } from "../lib/fbq";
 
 export function ThankYou() {
   const [params] = useSearchParams()
   const sessionId = params.get("session_id")
-  useEffect(() => {
-    // If you know the plan/amount here, pass it explicitly.
-    fbqTrack('Subscribe', { value: 299.00, currency: 'RON' });
-    // or: fbqTrack('Purchase', { value: 299.00, currency: 'RON' });
-  }, []);
   return (
     <>
       <Header />

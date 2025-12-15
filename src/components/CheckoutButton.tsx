@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import { fbqTrack } from "../lib/fbq";
-
 
 type Props = {
   priceId: string;
@@ -18,12 +16,6 @@ export function CheckoutButton({ priceId, quantity = 1, customerEmail, mode = "s
   const navigate = useNavigate();
 
   const onClick = async () => {
-    fbqTrack('InitiateCheckout', {
-      value: 299.00,            // put the real price for that plan
-      currency: 'RON',
-      content_name: 'Green Box Mic',
-      content_type: 'product',
-    });
     setLoading(true);
     try {
       // 1) Require auth
