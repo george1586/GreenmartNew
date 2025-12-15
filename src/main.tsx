@@ -37,7 +37,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <Auth /> },
   { path: "/plans", element: <Plans /> },
   { path: "/delivery-and-size", element: <DeliveryAndSize /> },
-  { path: "/custom-plan", element: <CustomPlan/> },
+  { path: "/custom-plan", element: <CustomPlan /> },
   {
     path: "/admin", element: (
       <AdminGuard>
