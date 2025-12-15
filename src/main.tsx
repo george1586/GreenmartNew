@@ -14,8 +14,15 @@ import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { LocalProducts } from "./pages/LocalProducts";
 import { Producers } from "./pages/Producers";
+import { GetStarted } from "./pages/GetStarted";
+import { Plans } from "./pages/Plans";
+import { DeliveryAndSize } from "./pages/DeliveryAndSize";
+import { Specific } from "./pages/Specific";
+import { AdminProductsPage } from "./pages/Admin";
+import { CustomPlan } from "./pages/CustomPlan";
+import { AdminGuard } from "./components/AdminGuard";
+import { p } from "framer-motion/client";
 
-// Router config
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/auth", element: <Auth /> },
@@ -26,6 +33,18 @@ const router = createBrowserRouter([
   { path: "/subscriptii", element: <Subscriptions /> },
   { path: "/producatori", element: <Producers /> },
   { path: "/produse-locale", element: <LocalProducts /> },
+  { path: "/get-started", element: <GetStarted /> },
+  { path: "/login", element: <Auth /> },
+  { path: "/plans", element: <Plans /> },
+  { path: "/delivery-and-size", element: <DeliveryAndSize /> },
+  { path: "/custom-plan", element: <CustomPlan/> },
+  {
+    path: "/admin", element: (
+      <AdminGuard>
+        <AdminProductsPage />
+      </AdminGuard>
+    )
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

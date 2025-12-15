@@ -5,15 +5,39 @@
 :root {
   --radius: 1.25rem;
 }
+
 .card {
   @apply bg-white rounded-2xl shadow-md;
 }
+
 .btn {
-  @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition;
+  @apply inline-flex items-center justify-center rounded-xl text-xl px-4 py-3 font-bold transition;
 }
+
 .btn-primary {
-  @apply bg-farm-green text-white hover:bg-emerald-600;
+  /* Primary CTA: solid organic orange as requested (#FF8C42)
+     Features: definitive size via utility classes on elements, rounded corners, soft shadow, hover lift. */
+  @apply text-white focus:outline-none;
+  background-color: #FF8C42;
+  border-radius: 0.75rem;
+  /* 12px */
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-weight: bold;
 }
-.btn-outline {
-  @apply border border-farm-green text-farm-green hover:bg-farm-light;
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background-color: #FF9A60;
+  /* ~10% lighter */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 6px 18px rgba(255, 138, 66, 0.12);
 }
