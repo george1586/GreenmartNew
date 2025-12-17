@@ -3,7 +3,7 @@ export function Footer() {
         < footer className="border-t bg-[#006835] text-white ">
             <div className="flex-col items-center justify-center mt-8 mb-4 flex gap-4">
                 <div className="flex flex-col items-center justify-center gap-8 mx-8 text-center text-lg">
-                    <h3>Our activity is sponsored by inVest - Urban Mobility Accelerator, a programme co-founded by EIT Urban Mobility and ADR Vest. </h3>
+                    <h3>Our activity is supported by inVest - Urban Mobility Accelerator, a programme co-funded by EIT Urban Mobility and ADR Vest. EIT Urban Mobility is supported by the European Institute of Innovation and Technology (EIT), a body of the European Union.</h3>
                     <div className="flex-row flex gap-8 flex-wrap">
                         <img src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/InVest%20Logo_tagline_editabil-5.png" className="h-12 w-48"></img>
                         <img src="https://hasxcndrhvtyjphntpft.supabase.co/storage/v1/object/public/images/Reversed%20Combined%20Logo.png" className="h-12 "></img>
